@@ -248,8 +248,8 @@ class SettingsModule {
                         delete LStateProperties[selectedStateProperty];
 
                     // delete from states
-                    for(var i in FSMStates.All) {
-                        var s = FSMStates.All[i];
+                    for(var i in FSMState.All) {
+                        var s = FSMState.All[i];
                         delete s.properties[selectedStateProperty];
                     }
 
