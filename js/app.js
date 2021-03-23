@@ -9,10 +9,13 @@ var app = {
 
     begin() {
 
-        var that = this;
+        // dont manage online mode yet
+        this.init();
+        return;
 
+        var that = this;
         var online = (document.location.href.substr(0, 4) == "http");
-        
+
         if(!online) {
             this.init();
             return;
