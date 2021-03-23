@@ -19,6 +19,10 @@ class FSMTransition {
     constructor(link) {
         
         if(!app["graph"] || !link) return;
+        this.configure(link);
+    }
+
+    configure(link, keep_info) {
         
         var get = app["graph"].graph.getNodeById.bind(app["graph"].graph);
         
@@ -27,20 +31,23 @@ class FSMTransition {
         this.id = link.id;
         this.origin = get(link.origin_id).title;
         this.target = get(link.target_id).title;
-        this.name = this.origin + "-to-" + this.target;
-        this.name = this.name.toLowerCase();
 
-        this.properties = {
-            type: "default"
-        };
-
-        if(!link._data) {
-            link._data = {
-                text: this.name
+        if(!keep_info) {
+            this.name = this.origin + "-to-" + this.target;
+            this.name = this.name.toLowerCase();
+    
+            this.properties = {
+                type: "default"
             };
-        }else
-        {
-            link._data.text = this.name;
+    
+            if(!link._data) {
+                link._data = {
+                    text: this.name
+                };
+            }else
+            {
+                link._data.text = this.name;
+            }
         }
     }
 

@@ -8320,12 +8320,21 @@ LGraphNode.prototype.executeAction = function(action)
         /*if (!color && link) {
             color = link.color || LGraphCanvas.link_type_colors[link.type];
         }*/
+
         if (!color) {
             color = this.default_link_color;
         }
         //color !== "#7F7 &&" 
         if (link != null && this.highlighted_links[link.id]) {
             color = "#5AF";
+
+            if(link._data && link._data.bidirectional) {
+                color = "#7CF";//"#7F7";
+            }
+        }else if(link != null && !this.highlighted_links[link.id]) {
+            if(link._data && link._data.bidirectional) {
+                color = "#8C8";
+            }
         }
 
         start_dir = start_dir || LiteGraph.RIGHT;
@@ -8345,7 +8354,7 @@ LGraphNode.prototype.executeAction = function(action)
         //begin line shape
         ctx.beginPath();
         for (var i = 0; i < num_sublines; i += 1) {
-            var offsety = (i - (num_sublines - 1) * 0.5) * 5;
+            var offsety = (i - (num_sublines - 1) * 0.5) * 8;
 
             if (this.links_render_mode == LiteGraph.SPLINE_LINK) {
                 ctx.moveTo(a[0], a[1] + offsety);
@@ -8470,7 +8479,6 @@ LGraphNode.prototype.executeAction = function(action)
             ctx.stroke();
         }
 
-        var bidirectional = link && link._data && link._data.bidirectional;
         ctx.lineWidth = this.connections_width - (bidirectional ? 1 : 0);
         ctx.fillStyle = ctx.strokeStyle = color;
         ctx.stroke();

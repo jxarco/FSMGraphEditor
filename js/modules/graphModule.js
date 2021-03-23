@@ -100,6 +100,8 @@ class GraphModule {
 
                 if(Interface)
                     Interface.showTransitions();
+                
+                that.redraw();
 
             }, event);
         }
@@ -332,6 +334,13 @@ class GraphModule {
 
     processStateRenamed(node, value) {
 
+        // node exists with same name
+        var tmp_node = FSMState.GetByName(value);
+        if(tmp_node) {
+            LiteGUI.alert("Invalid name. State " + tmp_node.id + " has same name", {title: "Error"});
+            return;
+        }
+
         node.title = value;
 
         // search for links using this node
@@ -377,13 +386,28 @@ class GraphModule {
 
     updateTransitions() {
 
-        FSMTransition.ClearAll();
         var links = this.graph.links;
 
+        // remove transitions that no longer exist
+        for(var i in FSMTransition.All) {
+            var t = FSMTransition.All[i];
+            if(!links[t.id]) FSMTransition.RemoveById(t.id);
+        }
+
+        // update or create new ones
         for(var i in links) {
 
             let link = links[i];
-            FSMTransition.All.push( new FSMTransition(link) );
+            var id = link.id;
+            var t = FSMTransition.GetById(id);
+
+            // new transition
+            if(!t) {
+                FSMTransition.All.push( new FSMTransition(link) );
+            }else {
+                // update transition keeping name and properties
+                t.configure(link, true);
+            }
         }
 
         if(Interface)

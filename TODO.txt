@@ -19,6 +19,7 @@
 + apply property to all (transitions) / add to selected (nodes)
 + variables
 + do error preventing (variables exist in condition)
-
-
-- do error preventing (variables of type int, are int)
++ do error preventing (variables of type int, are int)
++ dont allow states with same name
++ change color bidirectional transitions (selected and non selected)
++ dont update transitions with modified name
