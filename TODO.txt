@@ -1,0 +1,24 @@
++ fix delete nodes
++ add bidirectionality
++ remove bidirectionality
++ render arrows using linear
++ fix crashes on delete nodes with bidirectionality
++ disable clone and copy paste for unique state names
++ show current transitions in node inspector
++ set bidirectionality from right click in link
++ show bidirectional transitions in node inspector
++ onmmouse up auto connection creating node
++ on rename state update connection info
++ dont render arrows using straigh links
++ add transition and state posible values in settings
++ refactor settings module ui
++ delete state types from global list
++ add properties to transitions and nodes
++ export json (scene graph and fsm)
++ set and export initial state
++ apply property to all (transitions) / add to selected (nodes)
++ variables
++ do error preventing (variables exist in condition)
+
+
+- do error preventing (variables of type int, are int)
