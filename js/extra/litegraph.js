@@ -7396,6 +7396,13 @@ LGraphNode.prototype.executeAction = function(action)
         var color = node.color || node.constructor.color || LiteGraph.NODE_DEFAULT_COLOR;
         var bgcolor = node.bgcolor || node.constructor.bgcolor || LiteGraph.NODE_DEFAULT_BGCOLOR;
 
+        // hardcoded 
+        if(FSMState.InitialState && node.id === FSMState.InitialState.id) {
+            var stateColor = LGraphCanvas.node_colors["yellow"];
+            color = stateColor.color;
+            bgcolor = stateColor.bgcolor;
+        }
+
         //shadow and glow
         if (node.mouseOver) {
             glow = true;
