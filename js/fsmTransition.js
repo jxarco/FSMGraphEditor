@@ -6,6 +6,7 @@
 var LTransitionTypes = [
     "",
     "wait_time",
+    "wait_state_finished",
     "check_variable"
 ];
 
