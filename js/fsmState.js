@@ -11,8 +11,8 @@ var LStateTypes = [
 ];
 
 var LStateProperties = {
-    "duration": "Number",
-    "offset": "String"
+    "duration": "float",
+    "offset": "string"
 }
 
 //node constructor class

@@ -10,8 +10,10 @@ var LTransitionTypes = [
 ];
 
 var LTransitionProperties = {
-    "time": "Number",
-    "condition": "String",
+    "frames": "int",
+    "time": "float",
+    "condition": "string",
+    "mute": "bool"
 };
 
 class FSMTransition {

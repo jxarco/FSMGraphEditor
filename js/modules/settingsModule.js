@@ -19,7 +19,7 @@ class SettingsModule {
         // ...
 
         // exporter
-        this.listVarTypes = ["String", "Number", "Boolean"]; //"Array"
+        this.listVarTypes = ["int", "float", "bool", "string"]; //"Array"
 
         this.icon = "https://webglstudio.org/latest/imgs/tabicon-debug.png";
     }
@@ -227,10 +227,10 @@ class SettingsModule {
                 {title: "Add to selected", callback: function(){
                     var value;
                     switch(LStateProperties[selectedStateProperty]) {
-                        case "String": value = "default"; break;
-                        case "Number": value = 0; break;
-                        // case "Array": value = [0, 0]; break;
-                        case "Boolean": value = false; break;
+                        case "int":
+                        case "float": value = 0; break;
+                        case "string": value = "default"; break;
+                        case "bool": value = false; break;
                         default: value = 0;
                     }
 
@@ -373,10 +373,10 @@ class SettingsModule {
                     
                     var value;
                     switch(LTransitionProperties[selectedTransitionProperty]) {
-                        case "String": value = "default"; break;
-                        case "Number": value = 0; break;
-                        // case "Array": value = [0, 0]; break;
-                        case "Boolean": value = false; break;
+                        case "int":
+                        case "float": value = 0; break;
+                        case "string": value = "default"; break;
+                        case "bool": value = false; break;
                         default: value = 0;
                     }
 

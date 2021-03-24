@@ -83,7 +83,7 @@ var Interface = {
         } 
         
         widgets.clear();
-        widgets.addTitle("State");
+        widgets.addSection("State");
         widgets.widgets_per_row = 2;
         widgets.addString("Name", node.title, {width: "65%", name_width: "40%", callback: function(v){ 
             if(app["graph"]) 
@@ -97,84 +97,12 @@ var Interface = {
         }});
         widgets.addSeparator();
 
-        var propsTitle = widgets.addTitle("Properties");
-        for(let p in node.properties) {
-            
-            var value = node.properties[p];
-            var func = null;
-
-            switch(value.constructor)
-            {
-                case Number:
-                    func = widgets.addNumber.bind(widgets);
-                    break;
-                case String:
-                    if(p == "type") {
-                        widgets.addCombo(p, value, {values: LStateTypes, name_width: "50%", callback: function(v){
-                            node.properties[p] = v;
-                        }});
-                    }else {
-                        func = widgets.addString.bind(widgets);
-                    }
-                    break;
-                case Boolean:
-                    func = widgets.addCheckbox.bind(widgets);
-                    break;
-            }
-
-            if(func)
-                func(p, value, {name_width: "50%", callback: function(v){
-                    node.properties[p] = v;
-                }});
-        }
-
-        var addButton = widgets.addButton(null, "+", {micro: true, callback: function(value, e){
-            
-            e.preventDefault();
-
-            var options = [
-                {title: "Properties", disabled: true}, null
-            ];
-
-            for(let i in LStateProperties) {
-
-                // transition already has property
-                if(node.properties[i] !== undefined) continue;
-
-                options.push({
-                    title: i,
-                    callback: function(){
-                        var value;
-                        switch(LStateProperties[i]) {
-                            case "String": value = ""; break;
-                            case "Number": value = 0; break;
-                            // case "Array": value = [0, 0]; break;
-                            case "Boolean": value = false; break;
-                            default: value = 0;
-                        }
-                        node.properties[i] = value;
-
-                        that.onInspectNode(node);
-                    }
-                });
-            }
-
-            new LiteGraph.ContextMenu( options, { event: e});
-        }});
-        
-        propsTitle.children[0].appendChild( addButton.content );
-        addButton.content.style.display = "contents";
-        addButton.content.querySelector(".micro").style.float = "right";
-        addButton.content.querySelector(".micro").style.marginRight = "15px";
-        // remove empty container
-        addButton.remove();
+        that.showProperties(node, LStateProperties, LStateTypes);
 
         var outs = {};
 
         if(node.outputs) {
-            widgets.addSeparator();
             widgets.addTitle("Transitions");
-
             for(var i = 0; i < node.outputs.length; ++i) {
     
                 var output = node.outputs[i];
@@ -215,6 +143,8 @@ var Interface = {
                 }});
             }
         }
+
+        widgets.endCurrentSection();
     },
 
     showTransitions(filter, use_previous_filter) {
@@ -259,104 +189,118 @@ var Interface = {
                 }});
             }
             
-            var propsTitle = widgets.addTitle("Properties");
-
-            for(let p in t.properties) {
-            
-                var value = t.properties[p];
-                var func = null;
-    
-                switch(value.constructor)
-                {
-                    case Number:
-                        func = widgets.addNumber.bind(widgets);
-                        break;
-                    case String:
-                        if(p == "type") {
-                            widgets.addCombo(p, value, {values: LTransitionTypes, name_width: "40%", callback: function(v){
-                                t.properties[p] = v;
-                            }});
-                        }else {
-                            func = widgets.addString.bind(widgets);
-                        }
-                        break;
-                    case Boolean:
-                        func = widgets.addCheckbox.bind(widgets);
-                        break;
-                }
-    
-                if(func)
-                    func(p, value, {name_width: "40%", callback: function(v){
-
-                        // check it first side if a valid variable
-                        if(p == "condition") {
-                            var tkns = v.split(" ");
-                            var variable = tkns[0];
-                            var that = this;
-
-                            if(FSMVariable.Exists(variable)) t.properties[p] = v;
-                            else {
-                                LiteGUI.alert("Variable \"" + variable + "\" not found", {
-                                    title: "Error", 
-                                    noclose: true,
-                                    on_close: function(){
-                                        that.lastElementChild.lastElementChild.lastElementChild.value = value;
-                                    }
-                                });
-                            }
-                        }
-                        else {
-                            t.properties[p] = v;
-                        }
-                    }});
-            }
-
-            if(Object.keys(t.properties).length)
-                widgets.addSeparator();
-                
-            var addButton = widgets.addButton(null, "+", {micro: true, callback: function(value, e){
-                
-                e.preventDefault();
-
-                var options = [
-                    {title: "Properties", disabled: true}, null
-                ];
-
-                for(let i in LTransitionProperties) {
-
-                    // transition already has property
-                    if(t.properties[i] !== undefined) continue;
-
-                    options.push({
-                        title: i,
-                        callback: function(){
-                            var value;
-                            switch(LTransitionProperties[i]) {
-                                case "String": value = ""; break;
-                                case "Number": value = 0; break;
-                                // case "Array": value = [0, 0]; break;
-                                case "Boolean": value = false; break;
-                                default: value = 0;
-                            }
-                            t.properties[i] = value;
-
-                            that.showTransitions(filter);
-                        }
-                    });
-                }
-
-                new LiteGraph.ContextMenu( options, { event: e});
-            }});
-            
-            propsTitle.children[0].appendChild( addButton.content );
-            addButton.content.style.display = "contents";
-            addButton.content.querySelector(".micro").style.float = "right";
-            addButton.content.querySelector(".micro").style.marginRight = "15px";
-            // remove empty container
-            addButton.remove();
+            that.showProperties(t, LTransitionProperties, LTransitionTypes, filter, true);
 
             widgets.endCurrentSection();
         }
+    },
+
+    showProperties(t, list, type_list, filter, is_transition) {
+
+        var that = this;
+        var widgets = this.inspector;
+        var propsTitle = widgets.addTitle("Properties");
+
+        for(let p in t.properties) {
+        
+            var value = t.properties[p];
+            var func = null;
+
+            switch(value.constructor)
+            {
+                case Number:
+                    func = widgets.addNumber.bind(widgets);
+                    break;
+                case String:
+                    if(p == "type") {
+                        widgets.addCombo(p, value, {values: type_list, name_width: "40%", callback: function(v){
+                            t.properties[p] = v;
+                        }});
+                        widgets.addSeparator();
+                    }else {
+                        func = widgets.addString.bind(widgets);
+                    }
+                    break;
+                case Boolean:
+                    func = widgets.addCheckbox.bind(widgets);
+                    break;
+            }
+
+            if(func) {
+                var precision = list[p] == "float" ? 3 : 0;
+                var is_string = list[p] == "string";
+                var propWidget = func(p, value, {precision: precision, name_width: is_string ? "30%" : "70%", callback: function(v){
+
+                    // check it first side if a valid variable
+                    if(p == "condition") {
+                        var tkns = v.split(" ");
+                        var variable = tkns[0];
+                        var that = this;
+
+                        if(FSMVariable.Exists(variable)) t.properties[p] = v;
+                        else {
+                            LiteGUI.alert("Variable \"" + variable + "\" not found", {
+                                title: "Error", 
+                                noclose: true,
+                                on_close: function(){
+                                    that.lastElementChild.lastElementChild.lastElementChild.value = value;
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        t.properties[p] = v;
+                    }
+                }});
+
+                propWidget.querySelector(".wname").classList.add(list[p])
+            }
+        }
+            
+        var addButton = widgets.addButton(null, "+", {micro: true, callback: function(value, e){
+            
+            e.preventDefault();
+
+            var options = [
+                {title: "Properties", disabled: true}, null
+            ];
+
+            for(let i in list) {
+
+                // transition already has property
+                if(t.properties[i] !== undefined) continue;
+
+                options.push({
+                    title: i,
+                    callback: function(){
+                        var value;
+                        switch(list[i]) {
+                            case "int":
+                            case "float": value = 0; break;
+                            case "bool": value = false; break;
+                            case "string":  value = ""; break;
+                            default: value = 0;
+                        }
+                        t.properties[i] = value;
+
+                        if(is_transition)
+                        that.showTransitions(filter);
+                        else
+                        that.onInspectNode(t);
+                    }
+                });
+            }
+
+            new LiteGraph.ContextMenu( options, { event: e});
+        }});
+        
+        propsTitle.children[0].appendChild( addButton.content );
+        addButton.content.style.display = "contents";
+        addButton.content.querySelector(".micro").style.float = "right";
+        addButton.content.querySelector(".micro").style.marginRight = "15px";
+        addButton.content.querySelector(".micro").style.padding = "0px";
+        // remove empty container
+        addButton.remove();
     },
 
     showVariables(filter) {
