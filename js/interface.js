@@ -170,10 +170,8 @@ var Interface = {
             widgets.widgets_per_row = 1;
             widgets.addSection("Link: " + t.name);
             widgets.addString("Name", t.name, {callback: function(v){ 
-                t.name = v;  
-                t.link._data.text = v;
-                if(app["graph"]) app["graph"].redraw();
-                that.showTransitions(filter);
+                if(app["graph"]) 
+                    app["graph"].processTransitionRenamed(t.id, null, v);
             }});
             widgets.addString("Source", t.origin, {disabled: true});
             widgets.addString("Target", t.target, {disabled: true});

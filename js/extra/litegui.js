@@ -7892,6 +7892,12 @@ Inspector.prototype.addNull = function(name,value, options)
 	return null;
 }
 
+// size in Pixels
+Inspector.prototype.addSpace = function(size)
+{
+	this.addInfo("", "").style.minHeight = size + "px";
+}
+
 //used when you dont know which widget to use
 Inspector.prototype.addDefault = function( name, value, options)
 {

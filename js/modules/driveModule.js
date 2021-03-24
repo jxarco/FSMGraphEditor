@@ -76,8 +76,8 @@ class DriveModule {
         widgets.addSeparator();
     
         var selectedFilename = this.lastFileLoaded ? this.lastFileLoaded.split(".").shift() : null;
-        widgets.addString("Filename", selectedFilename, {callback: function(v){ selectedFilename = v; }});
-        widgets.addInfo("");
+        widgets.addString("File name", selectedFilename, {placeHolder: "Without extension", callback: function(v){ selectedFilename = v; }});
+        widgets.addSpace(5);
         widgets.widgets_per_row = 2;
         widgets.addButton(null, "Export scene (.fsmgraph)", {callback: function(){
 
@@ -95,6 +95,7 @@ class DriveModule {
             }, {title: "Tip", width: 350});
         }});
         widgets.widgets_per_row = 1;
+        widgets.addSpace(5);
     }
 
     createFileSettings() {

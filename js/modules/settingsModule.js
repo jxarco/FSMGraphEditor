@@ -113,17 +113,19 @@ class SettingsModule {
             widgets.on_refresh();
             that.apply(); 
         }});
+        widgets.widgets_per_row = 1;
+        widgets.addSpace(7);
     }
 
     createStateSettigs() {
 
         var widgets = this.widgets, that = this;
 
-        widgets.addTitle("State");
+        widgets.addTitle("States");
         widgets.addSeparator();
 
         this.createSet(LStateTypes, LStateProperties);        
-        widgets.addInfo("", "").style.minHeight = "7px";
+        widgets.addSpace(7);
     }
 
     createTransitionSettigs() {
@@ -141,7 +143,6 @@ class SettingsModule {
         var widgets = this.widgets, that = this;
 
         // types
-
         widgets.widgets_per_row = 2;
         var newType = "";
         var addTypeWidget = widgets.addString(null, "", {placeHolder: "Add new type", width: "80%", name_width: "30%", callback: function(v){ 
@@ -220,7 +221,7 @@ class SettingsModule {
         var propertiesRegistered = Object.keys(properties_list);
         var regInfo = widgets.addInfo(null, "Registered properties (" + propertiesRegistered.length + ")");
         regInfo.style.fontWeight = "bold";
-        widgets.addInfo("", "").style.minHeight = "7px";
+        widgets.addSpace(7);
 
         widgets.widgets_per_row = 3;
         var newProperty = "";
@@ -259,7 +260,7 @@ class SettingsModule {
         });
 
         widgets.widgets_per_row = 1;
-        widgets.addInfo("", "").style.minHeight = "7px";
+        widgets.addSpace(7);
         widgets.widgets_per_row = 2;
         for(let p in properties_list) {
         

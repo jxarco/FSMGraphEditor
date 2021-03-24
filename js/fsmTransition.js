@@ -71,6 +71,7 @@ class FSMTransition {
 // i don't want to create a transition manager to store this
 FSMTransition.All = [];
 FSMTransition.GetById = function(id) { return FSMTransition.All.find(e => e.id === id ); }
+FSMTransition.GetByName = function(name) { return FSMTransition.All.find(e => e.name === name ); }
 FSMTransition.RemoveById = function(id) { 
     const index = FSMTransition.All.findIndex(e => e.id == id);
     if (index > -1) FSMTransition.All.splice(index, 1);

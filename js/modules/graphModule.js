@@ -90,20 +90,7 @@ class GraphModule {
 
         this.canvas.onRenameTransition = function(link, event) {
 
-            var t = FSMTransition.GetById(link.id);
-            if(!t) return;
-    
-            that.canvas.prompt("Name", "", function(v){
-
-                t.name = v; 
-                t.link._data.text = v;
-
-                if(Interface)
-                    Interface.showTransitions();
-                
-                that.redraw();
-
-            }, event);
+            that.processTransitionRenamed(link.id, event);
         }
 
         this.canvas.onRenameNode = function(node, value) {
@@ -312,46 +299,48 @@ class GraphModule {
         for(var i in links) {
 
             let link = links[i];
-            if(link.id == id) {
+            if(link.id != id) continue;
 
-                if(!link._data) link._data = {};
+            if(!link._data) link._data = {};
 
-                var t = null;
+            var t = null;
 
-                // make opposite transition
-                if(value) {
-                    // set slots to null, we dont have to render them
-                    var new_link = new LiteGraph.LLink(
-                        ++this.graph.last_link_id,
-                        link.type,
-                        link.target_id,
-                        null,
-                        link.origin_id,
-                        null
-                    );
-                        
-                    this.graph.links[new_link.id] = new_link;
-                    new_link._data = {};
-                    new_link._data["bidirectional"] = true;
-                    t = new FSMTransition(new_link);
-                    FSMTransition.All.push( t );
-
-                    // set current as bidirectional also
-                    link._data["bidirectional"] = true;
-                    link._data["related_link"] = new_link.id;
-                }
-                // remove related transition
-                else {
-                    delete links[link._data.related_link];
-                    link._data = {};
+            // make opposite transition
+            if(value) {
+                // set slots to null, we dont have to render them
+                var new_link = new LiteGraph.LLink(
+                    ++this.graph.last_link_id,
+                    link.type,
+                    link.target_id,
+                    null,
+                    link.origin_id,
+                    null
+                );
                     
-                    FSMTransition.UpdateLinkById(link.id, link);
-                    this.updateTransitions();
-                }
+                this.graph.links[new_link.id] = new_link;
+                new_link._data = {};
+                new_link._data["bidirectional"] = true;
+                t = new FSMTransition(new_link);
+                FSMTransition.All.push( t );
 
-                this.redraw();
-                return FSMTransition.GetById(id);
+                // set current as bidirectional also
+                link._data["bidirectional"] = true;
+                link._data["related_link"] = new_link.id;
             }
+            // remove related transition
+            else {
+                delete links[link._data.related_link];
+                link._data = {};
+                
+                FSMTransition.UpdateLinkById(link.id, link);
+                this.updateTransitions();
+            }
+
+            this.redraw();
+            var node = app["graph"].canvas.current_node;
+            if(node)
+                Interface.onInspectNode(node);
+            return FSMTransition.GetById(id);
         }
     }
 
@@ -360,7 +349,8 @@ class GraphModule {
         // node exists with same name
         var tmp_node = FSMState.GetByName(value);
         if(tmp_node) {
-            LiteGUI.alert("Invalid name. State " + tmp_node.id + " has same name", {title: "Error"});
+            LiteGUI.alert("Duplicated name", {title: "Error"});
+            Interface.onInspectNode(node);
             return;
         }
 
@@ -387,6 +377,37 @@ class GraphModule {
         }
 
         this.redraw();
+    }
+
+    processTransitionRenamed(link_id, event, new_name) {
+
+        var that = this;
+        var t = FSMTransition.GetById(link_id);
+        if(!t) return;
+
+        function inner(value) {
+
+            // transition exists with same name
+            var tmp_tr = FSMTransition.GetByName(value);
+            if(tmp_tr) {
+                LiteGUI.alert("Duplicated name", {title: "Error"});
+                if(Interface) Interface.showTransitions(t.name);
+                return;
+            }
+
+            t.name = value; 
+            t.link._data.text = value;
+            that.redraw();
+            if(Interface) Interface.showTransitions(value);
+        }
+
+        if(event) {
+            this.canvas.prompt("Name", "", function(v){
+                inner(v);
+            }, event);
+        }else {
+            inner(new_name);
+        }
     }
 
     setLinkData(id, data, value) {
