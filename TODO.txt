@@ -31,6 +31,8 @@
 + enable and fix connecto to slot directly (do nothing and call autoconnect)
 + refactor register stuff in settings
 + change type to "" if global type is deleted
++ fix bug deleted states with context menu are being exported
 
+- render links changing input/outputs in transition direction
 - subFSM?
 

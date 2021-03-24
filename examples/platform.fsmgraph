@@ -1,0 +1,324 @@
+{
+    "fsm": {
+        "transitions": [
+            {
+                "id": 1,
+                "origin": "idle_down",
+                "target": "move_up",
+                "name": "idle_down-to-move_up",
+                "properties": {
+                    "type": "check_variable",
+                    "condition": "enabled == true"
+                }
+            },
+            {
+                "id": 2,
+                "origin": "move_up",
+                "target": "idle_up",
+                "name": "move_up-to-idle_up",
+                "properties": {
+                    "type": "wait_state_finished"
+                }
+            },
+            {
+                "id": 3,
+                "origin": "idle_up",
+                "target": "move_down",
+                "name": "idle_up-to-move_down",
+                "properties": {
+                    "type": "wait_time",
+                    "time": 2
+                }
+            },
+            {
+                "id": 4,
+                "origin": "move_down",
+                "target": "cooldown",
+                "name": "move_down-to-cooldown",
+                "properties": {
+                    "type": "wait_state_finished"
+                }
+            },
+            {
+                "id": 5,
+                "origin": "cooldown",
+                "target": "idle_down",
+                "name": "cooldown-to-idle_down",
+                "properties": {
+                    "type": "wait_time",
+                    "time": 2
+                }
+            }
+        ],
+        "variables": [
+            {
+                "name": "enabled",
+                "type": "bool",
+                "default_value": false
+            }
+        ],
+        "registered_state_types": [
+            "",
+            "move",
+            "shake"
+        ],
+        "registered_state_properties": {
+            "duration": "float",
+            "offset": "string",
+            "amount": "float"
+        },
+        "registered_transition_types": [
+            "",
+            "wait_time",
+            "check_variable",
+            "wait_state_finished"
+        ],
+        "registered_transition_properties": {
+            "time": "float",
+            "condition": "string",
+            "solo": "bool",
+            "mute": "bool"
+        },
+        "settings": {
+            "onlyAutoConnect": true,
+            "render_connection_arrows": true,
+            "links_render_mode": 2,
+            "render_link_name": false,
+            "autocreate_node": true
+        }
+    },
+    "graph": {
+        "last_node_id": 5,
+        "last_link_id": 5,
+        "nodes": [
+            {
+                "id": 1,
+                "type": "states/default",
+                "pos": [
+                    24.307999999999854,
+                    355.31530000000004
+                ],
+                "size": {
+                    "0": 140,
+                    "1": 26
+                },
+                "flags": {},
+                "order": 0,
+                "mode": 0,
+                "inputs": [
+                    {
+                        "name": "In",
+                        "type": "object",
+                        "link": 5
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "Out",
+                        "type": "object",
+                        "links": [
+                            1
+                        ]
+                    }
+                ],
+                "title": "idle_down",
+                "properties": {
+                    "type": ""
+                }
+            },
+            {
+                "id": 2,
+                "type": "states/default",
+                "pos": [
+                    255.30800000000025,
+                    351.31530000000004
+                ],
+                "size": {
+                    "0": 140,
+                    "1": 26
+                },
+                "flags": {},
+                "order": 1,
+                "mode": 0,
+                "inputs": [
+                    {
+                        "name": "In",
+                        "type": "object",
+                        "link": 1
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "Out",
+                        "type": "object",
+                        "links": [
+                            2
+                        ]
+                    }
+                ],
+                "title": "move_up",
+                "properties": {
+                    "type": "move",
+                    "offset": "0 5 0",
+                    "duration": 3
+                }
+            },
+            {
+                "id": 3,
+                "type": "states/default",
+                "pos": [
+                    475.3080000000001,
+                    349.31530000000004
+                ],
+                "size": {
+                    "0": 140,
+                    "1": 26
+                },
+                "flags": {},
+                "order": 2,
+                "mode": 0,
+                "inputs": [
+                    {
+                        "name": "In",
+                        "type": "object",
+                        "link": 2
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "Out",
+                        "type": "object",
+                        "links": [
+                            3
+                        ]
+                    }
+                ],
+                "title": "idle_up",
+                "properties": {
+                    "type": "shake",
+                    "amount": 0.1
+                }
+            },
+            {
+                "id": 5,
+                "type": "states/default",
+                "pos": [
+                    414.30800000000005,
+                    537.3153000000001
+                ],
+                "size": {
+                    "0": 140,
+                    "1": 26
+                },
+                "flags": {
+                    "collapsed": false
+                },
+                "order": 4,
+                "mode": 0,
+                "inputs": [
+                    {
+                        "name": "In",
+                        "type": "object",
+                        "link": 4
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "Out",
+                        "type": "object",
+                        "links": [
+                            5
+                        ]
+                    }
+                ],
+                "title": "cooldown",
+                "properties": {
+                    "type": ""
+                }
+            },
+            {
+                "id": 4,
+                "type": "states/default",
+                "pos": [
+                    720,
+                    351
+                ],
+                "size": {
+                    "0": 140,
+                    "1": 26
+                },
+                "flags": {},
+                "order": 3,
+                "mode": 0,
+                "inputs": [
+                    {
+                        "name": "In",
+                        "type": "object",
+                        "link": 3
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "Out",
+                        "type": "object",
+                        "links": [
+                            4
+                        ]
+                    }
+                ],
+                "title": "move_down",
+                "properties": {
+                    "type": "move",
+                    "offset": "0 -5 0",
+                    "duration": 3
+                }
+            }
+        ],
+        "links": [
+            [
+                1,
+                1,
+                0,
+                2,
+                0,
+                "object"
+            ],
+            [
+                2,
+                2,
+                0,
+                3,
+                0,
+                "object"
+            ],
+            [
+                3,
+                3,
+                0,
+                4,
+                0,
+                "object"
+            ],
+            [
+                4,
+                4,
+                0,
+                5,
+                0,
+                "object"
+            ],
+            [
+                5,
+                5,
+                0,
+                1,
+                0,
+                "object"
+            ]
+        ],
+        "groups": [],
+        "config": {},
+        "extra": {},
+        "version": 0.4
+    }
+}

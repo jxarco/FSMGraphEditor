@@ -10834,10 +10834,11 @@ LGraphNode.prototype.executeAction = function(action)
         }
 
 		var graph = node.graph;
-		graph.beforeChange();
+        graph.sendActionToCanvas("deleteSelectedNodes");
+		/*graph.beforeChange();
         graph.remove(node);
 		graph.afterChange();
-        node.setDirtyCanvas(true, true);
+        node.setDirtyCanvas(true, true);*/
     };
 
     LGraphCanvas.onMenuNodeToSubgraph = function(value, options, e, menu, node) {
