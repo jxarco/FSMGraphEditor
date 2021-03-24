@@ -5950,7 +5950,11 @@ LGraphNode.prototype.executeAction = function(action)
                             e.canvasY
                         );
                         if (slot != -1) {
-                            if(!this.onlyAutoConnect) {
+
+                            if (this.onAutoConnectNode) {
+
+                                this.onAutoConnectNode(this.connecting_slot, this.connecting_node, node, slot);
+                            }else if(!this.onlyAutoConnect) {
                                 this.connecting_node.connect(
                                     this.connecting_slot,
                                     node,
@@ -5971,7 +5975,7 @@ LGraphNode.prototype.executeAction = function(action)
                                 );
                             } else if (this.onAutoConnectNode) {
 
-                                this.onAutoConnectNode(this, this.connecting_slot, this.connecting_node, node);
+                                this.onAutoConnectNode(this.connecting_slot, this.connecting_node, node);
 
                             } else if (
                                 input &&

@@ -119,7 +119,7 @@ class GraphModule {
             return t.name;
         }
 
-        this.canvas.onAutoConnectNode = function(GCanvas, slot, nodeSrc, nodeDst) {
+        this.canvas.onAutoConnectNode = function(slot, nodeSrc, nodeDst, connected_slot) {
 
             // cant connect to Entry
             if(nodeDst.type == "states/entry") {
@@ -196,21 +196,28 @@ class GraphModule {
             }
             else {
 
-                var i_slot = 0;
-                for(; i_slot < inputs.length; ++i_slot) {
+                // use connected
+                if(connected_slot) {
+                    nodeSrc.connect(slot, nodeDst, connected_slot);
+                } 
+                // search free or create
+                else {
+                    var i_slot = 0;
+                    for(; i_slot < inputs.length; ++i_slot) {
 
-                    var input = inputs[i_slot];
+                        var input = inputs[i_slot];
 
-                    // node has a free input
-                    if(!input.link)  {
-                        nodeSrc.connect(slot, nodeDst, i_slot);
-                        return;
-                    } 
+                        // node has a free input
+                        if(!input.link)  {
+                            nodeSrc.connect(slot, nodeDst, i_slot);
+                            return;
+                        } 
+                    }
+
+                    // at this point, there is no free input, create one and connect
+                    nodeDst.addInput("In", "object");
+                    nodeSrc.connect(slot, nodeDst, i_slot);
                 }
-
-                // at this point, there is no free input, create one and connect
-                nodeDst.addInput("In", "object");
-                nodeSrc.connect(slot, nodeDst, i_slot);
             }
         }
     }
