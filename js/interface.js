@@ -257,7 +257,7 @@ var Interface = {
             }
         }
             
-        var addButton = widgets.addButton(null, "+", {micro: true, callback: function(value, e){
+        var addButton = widgets.addButton(null, "+", {title: "Add new property", micro: true, callback: function(value, e){
             
             e.preventDefault();
 
