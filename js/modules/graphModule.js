@@ -31,10 +31,10 @@ class GraphModule {
             Interface.showVariables();
         }
 
-        this.canvas.onNewVariable = function(e) {
-            FSMVariable.All.push(new FSMVariable());
-            Interface.showVariables();
-        }
+        // this.canvas.onNewVariable = function(e) {
+        //     FSMVariable.All.push(new FSMVariable());
+        //     Interface.showVariables();
+        // }
 
         this.canvas.onNewNode = function(e) {
 

@@ -10904,10 +10904,10 @@ LGraphNode.prototype.executeAction = function(action)
                     content: "Add State",
                     callback: this.onNewNode.bind(this, event)
                 },
-                {
-                    content: "Add Variable",
-                    callback: this.onNewVariable.bind(this, event)
-                },
+                // {
+                //     content: "Add Variable",
+                //     callback: this.onNewVariable.bind(this, event)
+                // },
                 null,
                 { content: "Add Group", callback: LGraphCanvas.onGroupAdd }
             ];
