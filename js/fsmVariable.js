@@ -3,13 +3,6 @@
 *   @jxarco 
 */
 
-// LVariableTypes = {
-//     "int": "Number",
-//     "float": "Number",
-//     "bool": "Boolean",
-//     "string": "String"
-// };
-
 LVariableTypes = [
     "int",
     "float",
@@ -23,7 +16,7 @@ class FSMVariable {
 
         this.name = name || "var" + FSMVariable.numVars++;
         this.type = type || "string";
-        this.value = value !== undefined ? value : "default";
+        this.value = value !== undefined ? value : "";
     }
 
     serialize() {

@@ -19,7 +19,7 @@ class SettingsModule {
         // ...
 
         // exporter
-        this.listVarTypes = ["String", "Number", "Boolean", "Array"];
+        this.listVarTypes = ["String", "Number", "Boolean"]; //"Array"
 
         this.icon = "https://webglstudio.org/latest/imgs/tabicon-debug.png";
     }
@@ -95,7 +95,7 @@ class SettingsModule {
         widgets.addTitle("Graph settings");
         widgets.addSeparator();
         widgets.widgets_per_row = 2;
-        widgets.addCheckbox("Autoconnect only", this.onlyAutoConnect, {name_width: "80%", callback: function(v){ that.onlyAutoConnect = v; that.apply(); }})
+        // widgets.addCheckbox("Autoconnect only", this.onlyAutoConnect, {name_width: "80%", callback: function(v){ that.onlyAutoConnect = v; that.apply(); }})
         widgets.addCheckbox("Connection names", this.render_link_name, {name_width: "80%", callback: function(v){ that.render_link_name = v; that.apply(); }})
         widgets.addCheckbox("Autocreate on drag", this.autocreate_node, {name_width: "80%", callback: function(v){ that.autocreate_node = v; that.apply(); }})
         widgets.addCheckbox("Connection arrows", this.render_connection_arrows, {name_width: "80%", callback: function(v){ that.render_connection_arrows = v; that.apply(); }})
@@ -229,7 +229,7 @@ class SettingsModule {
                     switch(LStateProperties[selectedStateProperty]) {
                         case "String": value = "default"; break;
                         case "Number": value = 0; break;
-                        case "Array": value = [0, 0]; break;
+                        // case "Array": value = [0, 0]; break;
                         case "Boolean": value = false; break;
                         default: value = 0;
                     }
@@ -375,7 +375,7 @@ class SettingsModule {
                     switch(LTransitionProperties[selectedTransitionProperty]) {
                         case "String": value = "default"; break;
                         case "Number": value = 0; break;
-                        case "Array": value = [0, 0]; break;
+                        // case "Array": value = [0, 0]; break;
                         case "Boolean": value = false; break;
                         default: value = 0;
                     }

@@ -437,17 +437,6 @@ input.text.number.full:hover{
 	/* width: calc(100%); */
 }
 
-.inspector .wcontent .inputfield.button.hdre{
-	background-color: #282828;
-	border-radius: 4px;
-}
-
-.inspector .wcontent .inputfield.button.hdre input{
-
-	    border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 4px;
-}
-
 .inspector .wcontent input.string{
 
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -472,6 +461,8 @@ input.text.number.full:hover{
 .inspector .wcontent input.number {
 	border-radius: 3px 0 0 3px;
 	text-align: center;
+	/* color: rgb(144, 197, 250) !important; */
+
 }
 
 .inspector .wcontent input.nano {
@@ -524,11 +515,11 @@ input.text.number.full:hover{
 }
 
 .inspector .wcontent .checkbox {
-	width: 2em;
-	height: 2em;
+	width: 1.8em;
+	height: 1.8em;
 	display: inline-block;
 	border: 1px solid rgba(255, 255, 255, 0.2);
-	border-radius: 4px;
+	border-radius: 50%;
 	text-align: center;
 
 	user-select: none;
@@ -547,7 +538,6 @@ input.text.number.full:hover{
 
 .inspector .wcontent .checkbox.on {
 	background-color: #FEE;
-/*	border-radius: 50%;*/
 	background: url("../data/tick.png");
     background-size: cover;
 }
@@ -555,6 +545,7 @@ input.text.number.full:hover{
 .inspector .wcontent .flag {
 	font-size: 0.6em;
 	margin-left: 10px;
+	margin-top: 2px;
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;

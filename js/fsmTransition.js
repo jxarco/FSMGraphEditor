@@ -4,7 +4,7 @@
 */
 
 var LTransitionTypes = [
-    "default",
+    "",
     "wait_time",
     "check_variable"
 ];
@@ -37,7 +37,7 @@ class FSMTransition {
             this.name = this.name.toLowerCase();
     
             this.properties = {
-                type: "default"
+                type: ""
             };
     
             if(!link._data) {

@@ -118,3 +118,14 @@ Webglstudio editor
 	margin: 20px;
 	font-size: 4em;
 }
+
+
+.inspector:not(.one_line) .widget.even.variable {
+	background-color: rgba(50,50,50,0.5);
+}
+
+.inspector:not(.one_line) .widget.even.variable .text.string {
+	background: none;
+	border: none;
+	color: #BBB;
+}

@@ -121,6 +121,12 @@ class GraphModule {
 
         this.canvas.onAutoConnectNode = function(GCanvas, slot, nodeSrc, nodeDst) {
 
+            // cant connect to Entry
+            if(nodeDst.type == "states/entry") {
+                console.warn("can't connect to Entry input!");
+                return;
+            }
+
             // cant connect to itself
             if(nodeSrc.id === nodeDst.id) {
                 console.warn("destination node is src node!");
@@ -248,16 +254,26 @@ class GraphModule {
         this.applySettings( app["settings"] );
         this.graph.start();
 
-        var node1 = this.addState("MoveUp", [150, 150]);
-        var node2 = this.addState("MoveDown", [600, 300]);
+        // var node1 = this.addState("states/entry", [300, 300]);
+        var node1 = this.addState("Idle", [300, 300]);
+        var node2 = this.addState("Move", [800, 300]);
 
         node1.connect(0, node2, 0);
     }
 
     addState(name, e) {
 
-        var node = LiteGraph.createNode("states/default");
-        node.title = name || node.title;
+        var type = "states/default";
+        var title = name;
+
+        // is type
+        if(name && name.includes("/")) {
+            type = name;
+            title = null;
+        }
+
+        var node = LiteGraph.createNode(type);
+        node.title = title || node.title;
 
         if(e.constructor == Array)
             node.pos = e;

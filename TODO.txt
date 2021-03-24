@@ -23,3 +23,7 @@
 + dont allow states with same name
 + change color bidirectional transitions (selected and non selected)
 + dont update transitions with modified name
++ remove "default" from everywhere
++ refactor variables panel
++ add entry node (not used yet)
+

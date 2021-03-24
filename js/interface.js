@@ -143,7 +143,7 @@ var Interface = {
 
             var value;
             switch(LStateProperties[selection]) {
-                case "String": value = "default"; break;
+                case "String": value = ""; break;
                 case "Number": value = 0; break;
                 case "Array": value = [0, 0]; break;
                 case "Boolean": value = false; break;
@@ -158,7 +158,7 @@ var Interface = {
 
         if(node.outputs) {
             widgets.addSeparator();
-            widgets.addTitle("Out Transitions");
+            widgets.addTitle("Transitions");
 
             for(var i = 0; i < node.outputs.length; ++i) {
     
@@ -311,7 +311,7 @@ var Interface = {
 
                 var value;
                 switch(LTransitionProperties[selection]) {
-                    case "String": value = "default"; break;
+                    case "String": value = ""; break;
                     case "Number": value = 0; break;
                     case "Array": value = [0, 0]; break;
                     case "Boolean": value = false; break;
@@ -335,65 +335,90 @@ var Interface = {
         filter = filter || "";
 
         widgets.addTitle("Variables (" + FSMVariable.All.length + ")");
-        widgets.addSeparator();
         widgets.widgets_per_row = 2;
-        widgets.addString("Filter", filter, {width: "85%", callback: function(v) { filter = v; that.showVariables(filter); }});
-        widgets.addButton(null, LiteGUI.special_codes.close, {width: "15%", micro: true, callback: function() { that.showVariables(); }});
-        widgets.widgets_per_row = 1;
+        widgets.addString(null, filter, {width: "85%", placeHolder: "Search", callback: function(v) { filter = v; that.showVariables(filter); }});
+        widgets.addButton(null, "+", {width: "15%", micro: true, callback: function() { 
+            FSMVariable.All.push(new FSMVariable());
+            that.showVariables(); 
+        }});
+        widgets.addSeparator();
+        // widgets.widgets_per_row = 1;
 
         for(var i in FSMVariable.All) {
 
             let variable = FSMVariable.All[i];
+            let is_bool = variable.type == "bool";
 
             if(!variable.name.includes(filter)) continue;
 
-            widgets.addTitle("Var info");
-
-            widgets.addString("Name", variable.name, {name_width: "40%", callback: function(v) {
+            var el = widgets.addString(null, variable.name, {width: is_bool ? "80%" : "50%", callback: function(v) {
                 variable.name = v; 
                 that.showVariables(filter); 
             }});
 
-            widgets.addCombo("Type", variable.type, {values: LVariableTypes, name_width: "40%", callback: function(v){
-                variable.type = v;
+            el.classList.add("variable");
+
+            el.addEventListener("contextmenu", function(e){
+
+                e.preventDefault();
+    
+                new LiteGraph.ContextMenu( [
+                    {title: "Edit", disabled: true}, null,
+                    {
+                        title: "Union", 
+                        has_submenu: true,
+                        submenu: {
+                            callback: changeUnionType,
+                            options: [
+                                {title: "int"},
+                                {title: "float"},
+                                {title: "bool"},
+                                {title: "string"}
+                            ]
+                        }
+                    },
+                    {title: "Delete", callback: function(){
+                        FSMVariable.RemoveByName(variable.name);
+                        that.showVariables(filter);
+                    }}
+                ], { event: e});
+            });
+
+            function changeUnionType(){
                 
-                switch(v) {
+                var type = variable.type = this.innerText;
+
+                switch(type) {
                     case "int":
                     case "float": variable.value = 0; break;
                     case "bool": variable.value = false; break;
-                    case "string": variable.value = "default"; break;
+                    case "string": variable.value = ""; break;
                     default: variable.value = 0;
                 }
 
                 that.showVariables(filter);
-            }});
+            }
 
             var value = variable.value;
-            var func = null;
 
             switch(value.constructor)
             {
                 case Number:
-                    func = widgets.addNumber.bind(widgets);
+                    func = widgets.addNumber(null, value, {width: "50%", callback: function(v){
+                        variable.value = v;
+                    }});
                     break;
                 case String:
-                    func = widgets.addString.bind(widgets);
+                    func = widgets.addString(null, value, {width: "50%", callback: function(v){
+                        variable.value = v;
+                    }});
                     break;
                 case Boolean:
-                    func = widgets.addCheckbox.bind(widgets);
+                    func = widgets.addCheckbox(null, value, {width: "20%", callback: function(v){
+                        variable.value = v;
+                    }});
                     break;
             }
-
-            if(func)
-                func("Default value", value, {name_width: "40%", callback: function(v){
-                    variable.value = v;
-                }});
-
-            widgets.addSeparator();
-            widgets.addButton(null, "Remove", {callback: function(){
-                FSMVariable.RemoveByName(variable.name);
-                that.showVariables(filter);
-            }});
         }
     }
 }

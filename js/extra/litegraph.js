@@ -8251,6 +8251,11 @@ LGraphNode.prototype.executeAction = function(action)
 
                 let bidirectional = link._data && link._data.bidirectional == true;
 
+                if(0) {
+                    start_node_slotpos = [start_node.pos[0] + start_node.size[0]/2, start_node.pos[1] + (start_node.size[1] - LiteGraph.NODE_TITLE_HEIGHT) /2];
+                    end_node_slotpos = [node.pos[0] + node.size[0]/2, node.pos[1] + (node.size[1] - LiteGraph.NODE_TITLE_HEIGHT) /2];
+                }
+
                 this.renderLink(
                     ctx,
                     start_node_slotpos,

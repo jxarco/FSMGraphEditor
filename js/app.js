@@ -64,10 +64,3 @@ function REGISTER_MODULE(name, class_name)
         app[name] = app.modules[name] = new class_name();
     }
 }
-
-function getUid( large ){
-    var S4 = function() {
-        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-    };
-    return (S4()+S4()+ (large ? "-"+S4()+"-"+S4()+"-"+S4() : "") );
-}
