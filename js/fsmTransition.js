@@ -10,9 +10,9 @@ var LTransitionTypes = [
 ];
 
 var LTransitionProperties = {
-    "frames": "int",
     "time": "float",
     "condition": "string",
+    "solo": "bool",
     "mute": "bool"
 };
 

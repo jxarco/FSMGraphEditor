@@ -232,7 +232,7 @@ var Interface = {
                 var propWidget = func(p, value, {precision: precision, name_width: is_string ? "30%" : "70%", callback: function(v){
 
                     // check it first side if a valid variable
-                    if(p == "condition") {
+                    if(is_transition && p == "condition") {
                         var tkns = v.split(" ");
                         var variable = tkns[0];
                         var that = this;

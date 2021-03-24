@@ -29,7 +29,8 @@
 + add new transition using contextmenu
 + sort/unsort variable list
 + enable and fix connecto to slot directly (do nothing and call autoconnect)
++ refactor register stuff in settings
++ change type to "" if global type is deleted
 
-- refactor register stuff in settings
 - subFSM?
 

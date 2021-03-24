@@ -122,142 +122,8 @@ class SettingsModule {
         widgets.addTitle("State");
         widgets.addSeparator();
 
-        // types
-
-        widgets.widgets_per_row = 2;
-        var newType = "";
-        var addTypeWidget = widgets.addString("Add new type", "", {width: "90%", name_width: "30%", callback: function(v){ 
-            newType = v;
-        }});
-
-        function registerType() {
-            if(newType.length) {
-                newType = newType.toLowerCase();
-                const index = LStateTypes.indexOf(newType);
-                if(index > 0) return;
-                LStateTypes.push( newType );
-                newType = "";
-                widgets.on_refresh();
-                Interface.onInspectNode(app["graph"].canvas.current_node);
-            }
-        }
-
-        widgets.addButton(null, "Add", {width: "10%", callback: function(v){ 
-            registerType();
-        }})
-
-        // hacky to get input of element
-        addTypeWidget.lastElementChild.lastElementChild.lastElementChild.addEventListener("keyup", function(e){
-            if(e.keyCode === 13) {
-                e.stopPropagation(); registerType();
-            }
-        });
-        
-        widgets.widgets_per_row = 1;
-        var selectedRegisteredType = null;
-        var list = widgets.addList("Registered types (" + LStateTypes.length + ")", LStateTypes, {name_width: "60.5%", height: 90, callback: function(v){
-            selectedRegisteredType = v;
-        }});
-        
-        list.addEventListener("contextmenu", function(e){
-
-            e.preventDefault();
-            if(!selectedRegisteredType) return;
-
-            new LiteGraph.ContextMenu( [
-                {title: selectedRegisteredType, disabled: true}, null,
-                {title: "Delete", callback: function(){
-                    const index = LStateTypes.indexOf(selectedRegisteredType);
-                    if(index > 0) LStateTypes.splice(index, 1);
-                    widgets.on_refresh();
-                    Interface.onInspectNode(app["graph"].canvas.current_node);
-                }}
-            ], { event: e});
-        });
-
-        // properties
-
-        widgets.widgets_per_row = 2;
-        var newStateProperty = "";
-        var addStatePropertyWidget = widgets.addString("New property", "", {width: "60%", name_width: "40%", callback: function(v){ 
-            newStateProperty = v;
-        }});
-
-        var selectedVarType = this.listVarTypes[0];
-        widgets.addCombo(null, selectedVarType, {width: "30%", name_width: "15%", values: this.listVarTypes, callback: function(v){
-            selectedVarType = v;
-        }});
-
-        function registerStateProperty() {
-            if(newStateProperty.length) {
-                newStateProperty = newStateProperty.toLowerCase();
-                if(LStateProperties[newStateProperty]) return;
-                LStateProperties[newStateProperty] = selectedVarType;
-                newStateProperty = "";
-                widgets.on_refresh();
-                Interface.onInspectNode(app["graph"].canvas.current_node);
-            }
-        }
-
-        widgets.addButton(null, "Add", {width: "10%", callback: function(v){ 
-            registerStateProperty();
-        }})
-
-        // hacky to get input of element
-        addStatePropertyWidget.lastElementChild.lastElementChild.lastElementChild.addEventListener("keyup", function(e){
-            if(e.keyCode === 13) {
-                e.stopPropagation(); registerStateProperty();
-            }
-        });
-
-        widgets.widgets_per_row = 1;
-        var selectedStateProperty = null;
-        var statePropertiesRegistered = Object.keys(LStateProperties);
-        var list = widgets.addList("Registered properties (" + statePropertiesRegistered.length + ")", statePropertiesRegistered, {name_width: "60.5%", height: 90, callback: function(v){
-            selectedStateProperty = v;
-        }});
-        
-        list.addEventListener("contextmenu", function(e){
-
-            e.preventDefault();
-            if(!selectedStateProperty) return;
-
-            new LiteGraph.ContextMenu( [
-                {title: selectedStateProperty, disabled: true}, null,
-                {title: "Add to selected", callback: function(){
-                    var value;
-                    switch(LStateProperties[selectedStateProperty]) {
-                        case "int":
-                        case "float": value = 0; break;
-                        case "string": value = "default"; break;
-                        case "bool": value = false; break;
-                        default: value = 0;
-                    }
-
-                    var canvas = app["graph"].canvas;
-                    for(var i in canvas.selected_nodes) {
-                        var s = canvas.selected_nodes[i];
-                        if(s.properties[selectedStateProperty]) return;
-                        s.properties[selectedStateProperty] = value; 
-                    }
-
-                    Interface.onInspectNode(app["graph"].canvas.current_node);
-                }},
-                {title: "Delete", callback: function(){
-                    if(LStateProperties[selectedStateProperty]) 
-                        delete LStateProperties[selectedStateProperty];
-
-                    // delete from states
-                    for(var i in FSMState.All) {
-                        var s = FSMState.All[i];
-                        delete s.properties[selectedStateProperty];
-                    }
-
-                    widgets.on_refresh();
-                    Interface.onInspectNode(app["graph"].canvas.current_node);
-                }}
-            ], { event: e});
-        });
+        this.createSet(LStateTypes, LStateProperties);        
+        widgets.addInfo("", "").style.minHeight = "7px";
     }
 
     createTransitionSettigs() {
@@ -267,27 +133,37 @@ class SettingsModule {
         widgets.addTitle("Transitions");
         widgets.addSeparator();
 
+        this.createSet(LTransitionTypes, LTransitionProperties, true);
+    }
+
+    createSet(types_list, properties_list, is_transition) {
+        
+        var widgets = this.widgets, that = this;
+
         // types
 
         widgets.widgets_per_row = 2;
         var newType = "";
-        var addTypeWidget = widgets.addString("Add new type", "", {width: "90%", name_width: "30%", callback: function(v){ 
+        var addTypeWidget = widgets.addString(null, "", {placeHolder: "Add new type", width: "80%", name_width: "30%", callback: function(v){ 
             newType = v;
         }});
 
         function registerType() {
             if(newType.length) {
                 newType = newType.toLowerCase();
-                const index = LTransitionTypes.indexOf(newType);
+                const index = types_list.indexOf(newType);
                 if(index > 0) return;
-                LTransitionTypes.push( newType );
+                types_list.push( newType );
                 newType = "";
                 widgets.on_refresh();
-                Interface.showTransitions(null, true);
+                if(!is_transition)
+                    Interface.onInspectNode(app["graph"].canvas.current_node);
+                else
+                    Interface.showTransitions(null, true);
             }
         }
 
-        widgets.addButton(null, "Add", {width: "10%", callback: function(v){ 
+        widgets.addButton(null, "Add", {width: "20%", callback: function(v){ 
             registerType();
         }})
 
@@ -300,7 +176,7 @@ class SettingsModule {
         
         widgets.widgets_per_row = 1;
         var selectedRegisteredType = null;
-        var list = widgets.addList("Registered types (" + LTransitionTypes.length + ")", LTransitionTypes, {name_width: "60.5%", height: 90, callback: function(v){
+        var list = widgets.addList("Registered types (" + types_list.length + ")", types_list, {name_width: "60.5%", height: 90, callback: function(v){
             selectedRegisteredType = v;
         }});
         
@@ -312,95 +188,172 @@ class SettingsModule {
             new LiteGraph.ContextMenu( [
                 {title: selectedRegisteredType, disabled: true}, null,
                 {title: "Delete", callback: function(){
-                    const index = LTransitionTypes.indexOf(selectedRegisteredType);
-                    if(index > 0) LTransitionTypes.splice(index, 1);
+                    // delete from list
+                    const index = types_list.indexOf(selectedRegisteredType);
+                    if(index > 0) types_list.splice(index, 1);
+
+                    // delete from everyone who has it
+                    if(!is_transition) {
+                        for(var i in FSMState.All) {
+                            var s = FSMState.All[i];
+                            if(s.properties.type == selectedRegisteredType) s.properties.type = "";
+                        }
+                    }else {
+                        for(var i in FSMTransition.All) {
+                            var t = FSMTransition.All[i];
+                            if(t.properties.type == selectedRegisteredType) t.properties.type = "";
+                        }
+                    }
+
                     widgets.on_refresh();
-                    Interface.showTransitions(null, true);
+                    if(!is_transition)
+                        Interface.onInspectNode(app["graph"].canvas.current_node);
+                    else
+                        Interface.showTransitions(null, true);
                 }}
             ], { event: e});
         });
 
+        widgets.addSeparator();
         // properties
 
-        widgets.widgets_per_row = 2;
-        var newTransitionProperty = "";
-        var addTransitionWidget = widgets.addString("New property", "", {width: "60%", name_width: "40%", callback: function(v){ 
-            newTransitionProperty = v;
+        var propertiesRegistered = Object.keys(properties_list);
+        var regInfo = widgets.addInfo(null, "Registered properties (" + propertiesRegistered.length + ")");
+        regInfo.style.fontWeight = "bold";
+        widgets.addInfo("", "").style.minHeight = "7px";
+
+        widgets.widgets_per_row = 3;
+        var newProperty = "";
+        var addPropertyWidget = widgets.addString(null, "", {placeHolder: "New property", width: "60%", name_width: "40%", callback: function(v){ 
+            newProperty = v;
         }});
 
         var selectedVarType = this.listVarTypes[0];
-        widgets.addCombo(null, selectedVarType, {width: "30%", name_width: "15%", values: this.listVarTypes, callback: function(v){
+        widgets.addCombo(null, selectedVarType, {width: "20%", name_width: "15%", values: this.listVarTypes, callback: function(v){
             selectedVarType = v;
         }});
 
-        function registerTransitionProperty() {
-            if(newTransitionProperty.length) {
-                newTransitionProperty = newTransitionProperty.toLowerCase();
-                if(LTransitionProperties[newTransitionProperty]) return;
-                LTransitionProperties[newTransitionProperty] = selectedVarType;
-                newTransitionProperty = "";
+        function registerProperty() {
+            if(newProperty.length) {
+                newProperty = newProperty.toLowerCase();
+                if(properties_list[newProperty]) return;
+                properties_list[newProperty] = selectedVarType;
+                newProperty = "";
                 widgets.on_refresh();
-                Interface.showTransitions(null, true);
+                if(!is_transition)
+                    Interface.onInspectNode(app["graph"].canvas.current_node);
+                else
+                    Interface.showTransitions(null, true);
             }
         }
 
-        widgets.addButton(null, "Add", {width: "10%", callback: function(v){ 
-            registerTransitionProperty();
+        widgets.addButton(null, "Add", {width: "20%", callback: function(v){ 
+            registerProperty();
         }})
 
         // hacky to get input of element
-        addTransitionWidget.lastElementChild.lastElementChild.lastElementChild.addEventListener("keyup", function(e){
+        addPropertyWidget.lastElementChild.lastElementChild.lastElementChild.addEventListener("keyup", function(e){
             if(e.keyCode === 13) {
-                e.stopPropagation(); registerTransitionProperty();
+                e.stopPropagation(); registerProperty();
             }
         });
 
         widgets.widgets_per_row = 1;
-        var selectedTransitionProperty = null;
-        var transitionPropertiesRegistered = Object.keys(LTransitionProperties);
-        var list = widgets.addList("Registered properties (" + transitionPropertiesRegistered.length + ")", transitionPropertiesRegistered, {name_width: "60.5%", height: 90, callback: function(v){
-            selectedTransitionProperty = v;
-        }});
+        widgets.addInfo("", "").style.minHeight = "7px";
+        widgets.widgets_per_row = 2;
+        for(let p in properties_list) {
         
-        list.addEventListener("contextmenu", function(e){
+            var info = widgets.addInfo(p, "", {name_width: "100%"});
+            info.querySelector(".wname").classList.add(properties_list[p]);
 
-            e.preventDefault();
-            if(!selectedTransitionProperty) return;
+            info.addEventListener("contextmenu", function(e){
 
-            new LiteGraph.ContextMenu( [
-                {title: selectedTransitionProperty, disabled: true}, null,
-                {title: "Add to all", callback: function(){
-                    
-                    var value;
-                    switch(LTransitionProperties[selectedTransitionProperty]) {
-                        case "int":
-                        case "float": value = 0; break;
-                        case "string": value = "default"; break;
-                        case "bool": value = false; break;
-                        default: value = 0;
-                    }
+                e.preventDefault();
+                if(!p) return;
+    
+                if(!is_transition) {
+                    new LiteGraph.ContextMenu( [
+                        {title: p, disabled: true}, null,
+                        {title: "Add to selected", callback: function(){
+                            var value;
+                            switch(properties_list[p]) {
+                                case "int":
+                                case "float": value = 0; break;
+                                case "string": value = "default"; break;
+                                case "bool": value = false; break;
+                                default: value = 0;
+                            }
+        
+                            var canvas = app["graph"].canvas;
+                            for(var i in canvas.selected_nodes) {
+                                var s = canvas.selected_nodes[i];
+                                if(s.properties[p]) return;
+                                s.properties[p] = value; 
+                            }
+        
+                            if(!is_transition)
+                                Interface.onInspectNode(app["graph"].canvas.current_node);
+                            else
+                                Interface.showTransitions(null, true);
+                        }},
+                        {title: "Delete", callback: function(){
+                            if(properties_list[p]) 
+                                delete properties_list[p];
+        
+                            // delete from states
+                            for(var i in FSMState.All) {
+                                var s = FSMState.All[i];
+                                delete s.properties[p];
+                            }
+        
+                            widgets.on_refresh();
+                            if(!is_transition)
+                                Interface.onInspectNode(app["graph"].canvas.current_node);
+                            else
+                                Interface.showTransitions(null, true);
+                        }}
+                    ], { event: e});
+                }else {
+                    new LiteGraph.ContextMenu( [
+                        {title: p, disabled: true}, null,
+                        {title: "Add to all", callback: function(){
+                            
+                            var value;
+                            switch(LTransitionProperties[p]) {
+                                case "int":
+                                case "float": value = 0; break;
+                                case "string": value = "default"; break;
+                                case "bool": value = false; break;
+                                default: value = 0;
+                            }
 
-                    FSMTransition.All.forEach(t => { 
-                        if(t.properties[selectedTransitionProperty]) return;
-                        t.properties[selectedTransitionProperty] = value; 
-                    });
+                            FSMTransition.All.forEach(t => { 
+                                if(t.properties[p]) return;
+                                t.properties[p] = value; 
+                            });
 
-                    Interface.showTransitions(null, true);
-                }},
-                {title: "Delete", callback: function(){
-                    if(LTransitionProperties[selectedTransitionProperty]) 
-                        delete LTransitionProperties[selectedTransitionProperty];
-                    
-                    // delete from transitions
-                    FSMTransition.All.forEach(t => { 
-                        delete t.properties[selectedTransitionProperty];
-                    });
+                            Interface.showTransitions(null, true);
+                        }},
+                        {title: "Delete", callback: function(){
+                            if(LTransitionProperties[p]) 
+                                delete LTransitionProperties[p];
+                            
+                            // delete from transitions
+                            FSMTransition.All.forEach(t => { 
+                                delete t.properties[p];
+                            });
 
-                    widgets.on_refresh();
-                    Interface.showTransitions(null, true);
-                }}
-            ], { event: e});
-        });
+                            widgets.on_refresh();
+                            Interface.showTransitions(null, true);
+                        }}
+                    ], { event: e});
+                }
+
+                
+            });
+        }
+
+        widgets.widgets_per_row = 1;
     }
 
     apply() {
