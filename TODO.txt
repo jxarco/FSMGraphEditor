@@ -26,4 +26,10 @@
 + remove "default" from everywhere
 + refactor variables panel
 + add entry node (not used yet)
++ add new transition using contextmenu
++ sort/unsort variable list
+
+- enable and fix connecto to slot directly (do nothing and call autoconnect)
+- refactor register stuff in settings
+- subFSM?
 

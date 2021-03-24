@@ -108,7 +108,7 @@ class DriveModule {
 
         this.browser_container = files_area.content;
         this.browser_container.classList.add("resources-panel-container");
-        this.browser_container.style.height = "700px";
+        // this.browser_container.style.height = "700px";
 
         LiteGUI.createDropArea( this.browser_container, function(e){
 
@@ -308,7 +308,7 @@ class DriveModule {
 
         for(var i in fsm_data.variables) {
             var v = fsm_data.variables[i];
-            FSMVariable.All.push(new FSMVariable(v.name, v.default_value, v.type));
+            FSMVariable.All.push(new FSMVariable(v.name, v.type, v.default_value));
         }
         
         // fill registered state and transition types
@@ -340,6 +340,7 @@ class DriveModule {
     {
         options = options || {};
         var parent = this.browser_container;
+        parent.style.height = (160 + Math.trunc(ObjectSize(this.files) / 5) * 130) +  "px";
 
         // Clear resources panel
         parent.innerHTML = "";
@@ -374,7 +375,7 @@ class DriveModule {
             else if(options.info)
                 root.innerHTML = "<div class='file-list-info'>"+options.info+"</div>";
             else
-                root.innerHTML = "<div class='file-list-info'>No items</div>";
+                root.innerHTML = "<div class='file-list-info'>No items (drag files here)</div>";
         }
     }
 

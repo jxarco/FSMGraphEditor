@@ -30,7 +30,13 @@ function getExtension(filename) {
 }
 
 function ObjectIsEmpty(o) {
+    if(!o) return true;
     return Object.keys(o).length > 0;
+}
+
+function ObjectSize(o) {
+    if(!o) return 0;
+    return Object.keys(o).length;
 }
 
 function getObjectClassName(obj) {

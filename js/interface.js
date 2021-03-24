@@ -97,7 +97,7 @@ var Interface = {
         }});
         widgets.addSeparator();
 
-        widgets.addTitle("Properties");
+        var propsTitle = widgets.addTitle("Properties");
         for(let p in node.properties) {
             
             var value = node.properties[p];
@@ -110,7 +110,7 @@ var Interface = {
                     break;
                 case String:
                     if(p == "type") {
-                        widgets.addCombo(p, value, {values: LStateTypes, name_width: "40%", callback: function(v){
+                        widgets.addCombo(p, value, {values: LStateTypes, name_width: "50%", callback: function(v){
                             node.properties[p] = v;
                         }});
                     }else {
@@ -123,36 +123,51 @@ var Interface = {
             }
 
             if(func)
-                func(p, value, {name_width: "40%", callback: function(v){
+                func(p, value, {name_width: "50%", callback: function(v){
                     node.properties[p] = v;
                 }});
         }
 
-        if(Object.keys(node.properties).length)
-            widgets.addSeparator();
-
-        var allProperties = Object.keys(LStateProperties);
-        var selection = allProperties.length ? allProperties[0] : null;
-        widgets.addList(null, allProperties, {height: Math.min(allProperties.length * 30, 120), callback: function(v){
-            selection = v;
-        }});
-        widgets.addButton(null, "Add", {callback: function(){
+        var addButton = widgets.addButton(null, "+", {micro: true, callback: function(value, e){
             
-            if(node.properties[selection])
-            return;
+            e.preventDefault();
 
-            var value;
-            switch(LStateProperties[selection]) {
-                case "String": value = ""; break;
-                case "Number": value = 0; break;
-                case "Array": value = [0, 0]; break;
-                case "Boolean": value = false; break;
-                default: value = 0;
+            var options = [
+                {title: "Properties", disabled: true}, null
+            ];
+
+            for(let i in LStateProperties) {
+
+                // transition already has property
+                if(node.properties[i] !== undefined) continue;
+
+                options.push({
+                    title: i,
+                    callback: function(){
+                        var value;
+                        switch(LStateProperties[i]) {
+                            case "String": value = ""; break;
+                            case "Number": value = 0; break;
+                            // case "Array": value = [0, 0]; break;
+                            case "Boolean": value = false; break;
+                            default: value = 0;
+                        }
+                        node.properties[i] = value;
+
+                        that.onInspectNode(node);
+                    }
+                });
             }
-            node.properties[selection] = value;
-            // node.properties = sortObject(t.properties);
-            that.onInspectNode(node);
+
+            new LiteGraph.ContextMenu( options, { event: e});
         }});
+        
+        propsTitle.children[0].appendChild( addButton.content );
+        addButton.content.style.display = "contents";
+        addButton.content.querySelector(".micro").style.float = "right";
+        addButton.content.querySelector(".micro").style.marginRight = "15px";
+        // remove empty container
+        addButton.remove();
 
         var outs = {};
 
@@ -244,7 +259,7 @@ var Interface = {
                 }});
             }
             
-            widgets.addTitle("Properties");
+            var propsTitle = widgets.addTitle("Properties");
 
             for(let p in t.properties) {
             
@@ -298,30 +313,48 @@ var Interface = {
 
             if(Object.keys(t.properties).length)
                 widgets.addSeparator();
-
-            var allProperties = Object.keys(LTransitionProperties);
-            var selection = allProperties.length ? allProperties[0] : null;
-            widgets.addList(null, allProperties, {height: Math.min(allProperties.length * 30, 120), callback: function(v){
-                selection = v;
-            }});
-            widgets.addButton(null, "Add", {callback: function(){
                 
-                if(t.properties[selection])
-                return;
+            var addButton = widgets.addButton(null, "+", {micro: true, callback: function(value, e){
+                
+                e.preventDefault();
 
-                var value;
-                switch(LTransitionProperties[selection]) {
-                    case "String": value = ""; break;
-                    case "Number": value = 0; break;
-                    case "Array": value = [0, 0]; break;
-                    case "Boolean": value = false; break;
-                    default: value = 0;
+                var options = [
+                    {title: "Properties", disabled: true}, null
+                ];
+
+                for(let i in LTransitionProperties) {
+
+                    // transition already has property
+                    if(t.properties[i] !== undefined) continue;
+
+                    options.push({
+                        title: i,
+                        callback: function(){
+                            var value;
+                            switch(LTransitionProperties[i]) {
+                                case "String": value = ""; break;
+                                case "Number": value = 0; break;
+                                // case "Array": value = [0, 0]; break;
+                                case "Boolean": value = false; break;
+                                default: value = 0;
+                            }
+                            t.properties[i] = value;
+
+                            that.showTransitions(filter);
+                        }
+                    });
                 }
-                t.properties[selection] = value;
 
-                // t.properties = sortObject(t.properties);
-                that.showTransitions(filter);
+                new LiteGraph.ContextMenu( options, { event: e});
             }});
+            
+            propsTitle.children[0].appendChild( addButton.content );
+            addButton.content.style.display = "contents";
+            addButton.content.querySelector(".micro").style.float = "right";
+            addButton.content.querySelector(".micro").style.marginRight = "15px";
+            // remove empty container
+            addButton.remove();
+
             widgets.endCurrentSection();
         }
     },
@@ -335,37 +368,72 @@ var Interface = {
         filter = filter || "";
 
         widgets.addTitle("Variables (" + FSMVariable.All.length + ")");
-        widgets.widgets_per_row = 2;
-        widgets.addString(null, filter, {width: "85%", placeHolder: "Search", callback: function(v) { filter = v; that.showVariables(filter); }});
-        widgets.addButton(null, "+", {width: "15%", micro: true, callback: function() { 
-            FSMVariable.All.push(new FSMVariable());
-            that.showVariables(); 
+        widgets.widgets_per_row = 3;
+        widgets.addString(null, filter, {width: "76%", placeHolder: "Search", callback: function(v) { filter = v; that.showVariables(filter); }});
+        widgets.addButton(null, "+", {title: "Add variable", width: "12%", micro: true, callback: function(value, e) { 
+            
+            e.preventDefault();
+
+            var options = [];
+            var types = ["int", "float", "bool", "string"];
+
+            for(let i in types) {
+                options.push({
+                    title: types[i],
+                    callback: function(){
+                        FSMVariable.All.push(new FSMVariable(null, types[i]));
+                        that.showVariables(); 
+                    }
+                });
+            }
+
+            new LiteGraph.ContextMenu( options, { event: e});
         }});
+        var sortBtn = widgets.addButton(null, "&#8798;", {title: "Sort", width: "12%", micro: true, callback: function(value, e) { 
+            
+            e.preventDefault();
+
+            var options = [];
+            var types = ["name", "type"];
+
+            for(let i in types) {
+                options.push({
+                    title: types[i],
+                    callback: function(){
+                        FSMVariable.Sort(types[i]);
+                        that.showVariables(); 
+                    }
+                });
+            }
+            new LiteGraph.ContextMenu( options, { event: e});
+        }});
+
+        sortBtn.style.marginLeft = "-15px";
         widgets.addSeparator();
-        // widgets.widgets_per_row = 1;
 
         for(var i in FSMVariable.All) {
 
             let variable = FSMVariable.All[i];
-            let is_bool = variable.type == "bool";
+            let is_string = variable.type == "string";
 
             if(!variable.name.includes(filter)) continue;
 
-            var el = widgets.addString(null, variable.name, {width: is_bool ? "80%" : "50%", callback: function(v) {
+            var el = widgets.addString(null, variable.name, {width: is_string ? "30%" : "70%", callback: function(v) {
                 variable.name = v; 
                 that.showVariables(filter); 
             }});
 
             el.classList.add("variable");
+            el.classList.add(variable.type);
 
             el.addEventListener("contextmenu", function(e){
 
                 e.preventDefault();
     
                 new LiteGraph.ContextMenu( [
-                    {title: "Edit", disabled: true}, null,
+                    {title: variable.name, disabled: true}, null,
                     {
-                        title: "Union", 
+                        title: "Type", 
                         has_submenu: true,
                         submenu: {
                             callback: changeUnionType,
@@ -404,17 +472,18 @@ var Interface = {
             switch(value.constructor)
             {
                 case Number:
-                    func = widgets.addNumber(null, value, {width: "50%", callback: function(v){
+                    var precision = variable.type == "float" ? 3 : 0;
+                    func = widgets.addNumber(null, value, {precision: precision, width: "30%", callback: function(v){
                         variable.value = v;
                     }});
                     break;
                 case String:
-                    func = widgets.addString(null, value, {width: "50%", callback: function(v){
+                    func = widgets.addString(null, value, {width: "70%", callback: function(v){
                         variable.value = v;
                     }});
                     break;
                 case Boolean:
-                    func = widgets.addCheckbox(null, value, {width: "20%", callback: function(v){
+                    func = widgets.addCheckbox(null, value, {width: "30%", callback: function(v){
                         variable.value = v;
                     }});
                     break;

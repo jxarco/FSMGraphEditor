@@ -128,4 +128,22 @@ Webglstudio editor
 	background: none;
 	border: none;
 	color: #BBB;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.inspector:not(.one_line) .widget.even.variable.bool .text.string {
+	border-left: 4px solid rgb(176, 54, 72) !important;
+}
+
+.inspector:not(.one_line) .widget.even.variable.int .text.string {
+	border-left: 4px solid rgb(24, 221, 167) !important;
+}
+
+.inspector:not(.one_line) .widget.even.variable.float .text.string {
+	border-left: 4px solid rgb(166,255,85) !important;
+}
+
+.inspector:not(.one_line) .widget.even.variable.string .text.string {
+	border-left: 4px solid rgb(255,1,222) !important;
 }

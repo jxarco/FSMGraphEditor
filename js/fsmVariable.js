@@ -12,11 +12,34 @@ LVariableTypes = [
 
 class FSMVariable {
     
-    constructor(name, value, type) {
+    constructor(name, type, value) {
 
         this.name = name || "var" + FSMVariable.numVars++;
         this.type = type || "string";
-        this.value = value !== undefined ? value : "";
+        this.value = value;
+
+        if(this.value !== undefined && value !== null)
+            this.checkValue();
+        else
+        {
+            switch(this.type) {
+                case "int":
+                case "float": this.value = 0; break;
+                case "bool": this.value = false; break;
+                case "string": this.value = ""; break;
+                default: this.value = 0;
+            }
+        }
+    }
+
+    checkValue() {
+
+        switch(this.type) {
+            case "int":
+            case "float": if(this.value.constructor !== Number) this.value = null; break;
+            case "bool": if(this.value.constructor !== Boolean) this.value = null; break;
+            case "string": if(this.value.constructor !== String) this.value = null; break;
+        }
     }
 
     serialize() {
@@ -50,6 +73,7 @@ class FSMVariable {
 }
 
 FSMVariable.numVars = 0;
+FSMVariable.sort = 1;
 
 FSMVariable.All = [];
 FSMVariable.GetByName = FSMVariable.Exists = function(name) { return FSMVariable.All.find(e => e.name === name ); };
@@ -58,7 +82,11 @@ FSMVariable.RemoveByName = function(name) {
     if (index > -1) FSMVariable.All.splice(index, 1);
 };
 FSMVariable.ClearAll = function() { FSMVariable.All.forEach(e => { delete e; }); FSMVariable.All.length = 0; };
+FSMVariable.Sort = function(p) {
+    FSMVariable.All.sort((a, b) => (a[p] > b[p] ? this.sort : -this.sort));
+    this.sort = -this.sort;
+}
 
 // testing
-FSMVariable.All.push( new FSMVariable("speed", 0.5, "float") );
-FSMVariable.All.push( new FSMVariable("enabled", false, "bool") );
+FSMVariable.All.push( new FSMVariable("speed", "float", 0.5) );
+FSMVariable.All.push( new FSMVariable("enabled", "bool", false) );

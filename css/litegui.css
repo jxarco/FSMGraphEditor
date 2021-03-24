@@ -598,6 +598,7 @@ input.text.number.full:hover{
 	border: 1px solid rgba(255, 255, 255, 0.2);
 	background-color: #282828;
 	border-radius: 4px;
+	height: 22px;
 }
 
 .inspector .wcontent button.micro.less, .inspector .wcontent button.micro.more {

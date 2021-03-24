@@ -8195,8 +8195,13 @@ Inspector.prototype.addNumber = function(name, value, options)
 
 		LiteGUI.trigger( element, "wbeforechange", e.target.value );
 
-		that.values[name] = e.target.value;
-		//Inspector.onWidgetChange.call(that,this,name,ret, options);
+		var value = e.target.value;
+		if(options.precision !== undefined) {
+			value = parseFloat(value);
+			value = value.toFixed( options.precision );
+		}
+		that.values[name] = value;
+		input.value = value;
 
 		if(options.callback)
 		{
@@ -8204,16 +8209,16 @@ Inspector.prototype.addNumber = function(name, value, options)
 			if( typeof(ret) == "number")
 				this.value = ret;
 		}
-		LiteGUI.trigger( element, "wchange", e.target.value );
+		LiteGUI.trigger( element, "wchange", value );
 		if(that.onchange)
-			that.onchange(name,e.target.value,element);
+			that.onchange(name, value, element);
 	});
 
 	element.setValue = function( v, skip_event) {
 		if(v === undefined)
 			return;
 		v = parseFloat(v);
-		if(options.precision)
+		if(options.precision !== undefined)
 			v = v.toFixed( options.precision );
 		v += (options.units || "");
 		if(input.value == v)
@@ -9538,6 +9543,7 @@ Inspector.prototype.addButton = function(name, value, options)
 	button.innerHTML = value;
 	button.addEventListener("click", function(event) {
 		Inspector.onWidgetChange.call( that, element, name, this.innerHTML, options, false, event);
+		element.lastEvent = event;
 		LiteGUI.trigger( button, "wclick", value );
 	});
 	this.append(element,options);
