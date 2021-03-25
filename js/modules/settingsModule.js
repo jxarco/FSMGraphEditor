@@ -13,7 +13,7 @@ class SettingsModule {
         this.render_link_name           = false;
         this.render_link_tooltip        = true;
         this.autocreate_node            = true;
-        this.links_render_mode          = LiteGraph.SPLINE_LINK;
+        this.links_render_mode          = LiteGraph.LINEAR_LINK;
 
         // states
         // ...

@@ -32,7 +32,8 @@
 + refactor register stuff in settings
 + change type to "" if global type is deleted
 + fix bug deleted states with context menu are being exported
++ render links changing input/outputs in transition direction
 
-- render links changing input/outputs in transition direction
+- bug make bidi more than once (from target node)
 - subFSM?
 
