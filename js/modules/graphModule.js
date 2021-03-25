@@ -137,7 +137,12 @@ class GraphModule {
 
                         if(output.links.find(e => e == input.link)) {
 
-                            that.setBidirectionalLink(input.link, true);
+                            var t = FSMTransition.GetById(input.link);
+                            if(!t.isBidirectional()) {
+                                that.setBidirectionalLink(input.link, true);
+                            }else{
+                                console.warn("already bidirectional!");
+                            }
                             bidirectional = true;
                             return;
                         }

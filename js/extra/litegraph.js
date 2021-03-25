@@ -6011,7 +6011,7 @@ LGraphNode.prototype.executeAction = function(action)
                     e.click_time < 300 &&
                     isInsideRectangle( e.canvasX, e.canvasY, node.pos[0], node.pos[1] - LiteGraph.NODE_TITLE_HEIGHT, LiteGraph.NODE_TITLE_HEIGHT, LiteGraph.NODE_TITLE_HEIGHT )
                 ) {
-                    node.collapse();
+                    // node.collapse();
                 }
 
                 this.dirty_canvas = true;
