@@ -210,8 +210,9 @@ class DriveModule {
         for(var i in FSMTransition.All) {
 
             var transition = FSMTransition.All[i];
-            var jTransition = { name: transition.name };
+            var jTransition = {};
             
+            // jTransition["name"] = transition.name;
             jTransition["source"] = transition.origin;
             jTransition["target"] = transition.target;
 
