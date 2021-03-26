@@ -7,13 +7,17 @@
 var LStateTypes = [
     "",
     "move",
-    "shake"
+    "shake",
+    "animation"
 ];
 
 var LStateProperties = {
     "duration": "float",
+    "animation": "string",
+    "amount": "float",
+    "loop": "bool",
     "offset": "string",
-    "amount": "float"
+    "root_motion": "bool"
 }
 
 //node constructor class

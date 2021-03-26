@@ -13,8 +13,10 @@ var LTransitionTypes = [
 var LTransitionProperties = {
     "time": "float",
     "condition": "string",
-    "solo": "bool",
-    "mute": "bool"
+    "blend_time": "float"
+    // ,
+    // "solo": "bool",
+    // "mute": "bool"
 };
 
 class FSMTransition {

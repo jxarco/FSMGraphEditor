@@ -35,5 +35,6 @@
 + render links changing input/outputs in transition direction
 + bug make bidi more than once (from target node)
 
+- transitions to source not appearing
 - subFSM?
 

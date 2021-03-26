@@ -29,33 +29,28 @@
     ],
     "transitions": [
         {
-            "name": "idle_down-to-move_up",
             "source": "idle_down",
             "target": "move_up",
             "type": "check_variable",
             "condition": "enabled == true"
         },
         {
-            "name": "move_up-to-idle_up",
             "source": "move_up",
             "target": "idle_up",
             "type": "wait_state_finished"
         },
         {
-            "name": "idle_up-to-move_down",
             "source": "idle_up",
             "target": "move_down",
             "type": "wait_time",
             "time": 2
         },
         {
-            "name": "move_down-to-cooldown",
             "source": "move_down",
             "target": "cooldown",
             "type": "wait_state_finished"
         },
         {
-            "name": "cooldown-to-idle_down",
             "source": "cooldown",
             "target": "idle_down",
             "type": "wait_time",

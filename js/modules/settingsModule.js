@@ -177,7 +177,9 @@ class SettingsModule {
         
         widgets.widgets_per_row = 1;
         var selectedRegisteredType = null;
-        var list = widgets.addList("Registered types (" + types_list.length + ")", types_list, {name_width: "60.5%", height: 90, callback: function(v){
+
+        var sorted = sortAlphabetically(types_list);
+        var list = widgets.addList("Registered types (" + types_list.length + ")", sorted, {name_width: "60.5%", height: 90, callback: function(v){
             selectedRegisteredType = v;
         }});
         

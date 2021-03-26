@@ -130,7 +130,7 @@ var Interface = {
         // show also bidirectional transitions
         for(var i in FSMTransition.All) {
 
-            var t = FSMTransition.All[i];
+            let t = FSMTransition.All[i];
             var link_id = t.link.id;
 
             // transition is bidirectional and node is target, not shown before
@@ -176,19 +176,8 @@ var Interface = {
             widgets.addString("Source", t.origin, {disabled: true});
             widgets.addString("Target", t.target, {disabled: true});
 
-            // source state manages bidirectionality (show this or make it only by clocking the link?)
-            if(0 && t.link.origin_slot != null && t.link.target_slot != null) {
-                
-                widgets.addSeparator();
-                widgets.addCheckbox("Bidirectional", t.link._data && t.link._data.bidirectional, {callback: function(v) {
-                    t.bidirectional = v;
-                    app["graph"].setBidirectionalLink(t.id, v);
-                    that.showTransitions(filter);
-                }});
-            }
-            
             that.showProperties(t, LTransitionProperties, LTransitionTypes, filter, true);
-
+            
             widgets.endCurrentSection();
         }
     },

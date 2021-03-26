@@ -5,6 +5,21 @@ function getUid( large ){
     return (S4()+ (large ? "-"+S4()+"-"+S4()+"-"+S4() : "") );
 }
 
+function sortAlphabetically(a) {
+
+    if(a[0].constructor !== String) 
+        return a;
+
+    var array = [].concat(a);
+    array.sort(function(a, b) {
+        var x = a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0); 
+        if(!x) x = a[1] < b[1] ? -1 : 1; 
+        return x; 
+    });
+
+    return array;
+}
+
 function sortObject(o) {
 
     var sortable = [];
