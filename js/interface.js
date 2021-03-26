@@ -297,7 +297,22 @@ var Interface = {
                     }
                 }});
 
-                propWidget.querySelector(".wname").classList.add(list[p])
+                propWidget.querySelector(".wname").classList.add(list[p]);
+                propWidget.addEventListener("contextmenu", function(e){
+
+                    e.preventDefault();
+        
+                    new LiteGraph.ContextMenu( [
+                        {title: p, disabled: true}, null,
+                        {title: "Delete", callback: function(){
+                            delete t.properties[p];
+                            if(is_transition)
+                                that.showTransitions(filter);
+                            else
+                                that.onInspectNode(t);
+                        }}
+                    ], { event: e});
+                });
             }
         }
             
