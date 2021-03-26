@@ -2192,24 +2192,41 @@
             this.target_id = o[3];
             this.target_slot = o[4];
             this.type = o[5];
+            
+            var isBidirectional = o[6];
+            if(isBidirectional) {
+                this._data = {
+                    bidirectional: true,
+                    related_link: o[7]
+                }
+            }
+
         } else {
-            this.id = o.id;
-            this.type = o.type;
-            this.origin_id = o.origin_id;
-            this.origin_slot = o.origin_slot;
-            this.target_id = o.target_id;
-            this.target_slot = o.target_slot;
+            // this.id = o.id;
+            // this.type = o.type;
+            // this.origin_id = o.origin_id;
+            // this.origin_slot = o.origin_slot;
+            // this.target_id = o.target_id;
+            // this.target_slot = o.target_slot;
+
+            throw("error parsing link, input is not an array");
         }
     };
 
     LLink.prototype.serialize = function() {
+        
+        // save if the link is bidirectional
+        var isBidirectional = this._data && this._data.bidirectional && this._data.related_link ? true : false;
+
         return [
             this.id,
             this.origin_id,
             this.origin_slot,
             this.target_id,
             this.target_slot,
-            this.type
+            this.type,
+            isBidirectional,
+            isBidirectional ? this._data.related_link : null
         ];
     };
 

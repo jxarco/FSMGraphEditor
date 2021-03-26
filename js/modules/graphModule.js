@@ -325,6 +325,7 @@ class GraphModule {
                 this.graph.links[new_link.id] = new_link;
                 new_link._data = {};
                 new_link._data["bidirectional"] = true;
+                new_link._data["related_link"] = id;
                 t = new FSMTransition(new_link);
                 FSMTransition.All.push( t );
 

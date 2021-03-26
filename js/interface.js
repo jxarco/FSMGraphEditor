@@ -179,6 +179,26 @@ var Interface = {
             that.showProperties(t, LTransitionProperties, LTransitionTypes, filter, true);
             
             widgets.endCurrentSection();
+
+            if(t.isBidirectional()) {
+
+                var id = t.link._data.related_link;
+                let bt = FSMTransition.GetById(id);
+
+                // discard bidirectional target states
+                if(!bt) return;
+
+                widgets.widgets_per_row = 1;
+                widgets.addSection("Link: " + bt.name);
+                widgets.addString("Name", bt.name, {callback: function(v){ 
+                    if(app["graph"]) 
+                        app["graph"].processTransitionRenamed(bt.id, null, v);
+                }});
+                widgets.addString("Source", bt.origin, {disabled: true});
+                widgets.addString("Target", bt.target, {disabled: true});
+
+                that.showProperties(bt, LTransitionProperties, LTransitionTypes, filter, true);
+            }
         }
     },
 
