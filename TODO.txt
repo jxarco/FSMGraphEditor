@@ -37,21 +37,8 @@
 + transitions to source not appearing
 + bidirectional links not parsed correctly
 + add type related properties
-
-- delete propeties from states or transitions
-- add blend_anim type, with factor_name, and blend_sample like:
-{
-    "name": "Idle/Run",
-    "type": "blend_anim",
-    "factor_name": "speed",
-    "animation": [
-        {"name": "idle", "factor": 0},
-        {"name": "walk", "factor": 4},
-        {"name": "run", "factor": 10},
-    ],
-    "root_motion": false,
-    "loop": true
-}
++ delete propeties from states or transitions
++ add blend_anim type, with factor_name, and blend_sample like
 
 - subFSM?
 

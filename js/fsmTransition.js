@@ -44,8 +44,7 @@ class FSMTransition {
             this.name = this.name.toLowerCase();
     
             this.properties = {
-                type: "",
-                blend_time: 1
+                type: ""
             };
     
             if(!link._data) {

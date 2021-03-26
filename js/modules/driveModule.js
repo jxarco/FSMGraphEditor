@@ -200,9 +200,11 @@ class DriveModule {
             var state = FSMState.All[i];
             var jState = { name: state.title };
             
-            for(var p in state.properties) {
-                jState[p] = state.properties[p];
-            }
+            this.fillProperties(jState, state.properties);
+
+            // for(var p in state.properties) {
+            //     jState[p] = state.properties[p];
+            // }
 
             jFsm.states.push(jState);
         }
@@ -233,6 +235,34 @@ class DriveModule {
         return jFsm;
     }
 
+    fillProperties(target, source) {
+
+        function isBlendSample(str) {
+            return str.includes("b_sample");
+        }
+
+        var blendSamples = null;
+
+        for( var p in source ) {
+
+            var prop = source[p];
+
+            // check any special cases
+            if(isBlendSample(p)) {
+                if(!blendSamples) blendSamples = [];
+                var info = prop.split(" ");
+                if(info.length > 2) throw("error exporting blend samples");
+                blendSamples.push({ name: info[0], blend_factor: JSON.parse(info[1]) });
+            }else {
+                target[p] = prop;
+            }
+        }
+
+        if(blendSamples) {
+            target["animation"] = blendSamples;
+        }
+    }
+
     serialize() {
 
         var fsm = {};
@@ -256,10 +286,12 @@ class DriveModule {
         // state types and properties
         fsm.registered_state_types      = LStateTypes;
         fsm.registered_state_properties = LStateProperties;
+        fsm.registered_state_type_data  = LStateTypeData;
 
         // transition types and properties
         fsm.registered_transition_types = LTransitionTypes;
         fsm.registered_transition_properties = LTransitionProperties;
+        fsm.registered_transition_type_data  = LTransitionTypeData;
 
         var settingshModule = app["settings"];
         fsm.settings = settingshModule.serialize();
@@ -316,10 +348,12 @@ class DriveModule {
         // fill registered state and transition types
         LStateTypes         = fsm_data.registered_state_types;
         LStateProperties    = fsm_data.registered_state_properties;
+        LStateTypeData      = fsm_data.registered_state_type_data;
 
         // transition types and properties
         LTransitionTypes        = fsm_data.registered_transition_types;
         LTransitionProperties   = fsm_data.registered_transition_properties;
+        LTransitionTypeData     = fsm_data.registered_transition_type_data;
 
         // other settings
 

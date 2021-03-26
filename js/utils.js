@@ -20,10 +20,11 @@ function sortAlphabetically(a) {
     return array;
 }
 
-function sortObject(o) {
+function sortObject(o, exclude) {
 
     var sortable = [];
     for (var k in o) {
+        if(k == exclude) continue;
         sortable.push([k, o[k]]);
     }
 
@@ -33,6 +34,9 @@ function sortObject(o) {
     });
 
     var objSorted = {}
+
+    if(exclude) objSorted[exclude] = o[exclude];
+
     sortable.forEach(function(item){
         objSorted[item[0]]=item[1]
     });

@@ -208,6 +208,8 @@ var Interface = {
         var widgets = this.inspector;
         var propsTitle = widgets.addTitle("Properties");
 
+        // t.properties = sortObject(t.properties, "type");
+
         for(let p in t.properties) {
         
             var value = t.properties[p];
@@ -273,7 +275,7 @@ var Interface = {
             if(func) {
                 var precision = list[p] == "float" ? 3 : 0;
                 var is_string = list[p] == "string";
-                var propWidget = func(p, value, {precision: precision, name_width: is_string ? "30%" : "70%", callback: function(v){
+                var propWidget = func(p, value, {precision: precision, name_width: is_string ? "35%" : "70%", callback: function(v){
 
                     // check it first side if a valid variable
                     if(is_transition && p == "condition") {
