@@ -88,5 +88,5 @@ FSMVariable.Sort = function(p) {
 }
 
 // testing
-FSMVariable.All.push( new FSMVariable("speed", "float", 0.5) );
 FSMVariable.All.push( new FSMVariable("enabled", "bool", false) );
+FSMVariable.All.push( new FSMVariable("last_animation_loop_id", "int", -1) );
