@@ -221,7 +221,44 @@ var Interface = {
                 case String:
                     if(p == "type") {
                         widgets.addCombo(p, value, {values: type_list, name_width: "40%", callback: function(v){
-                            t.properties[p] = v;
+                            var lastBlendTime = t.properties["blend_time"];
+                            t.properties = {
+                                type: v
+                            };
+
+                            // transitions always have blend_time
+                            if(lastBlendTime) t.properties["blend_time"] = lastBlendTime;
+
+                            // check if there's any type related property to add
+                            var typeData = is_transition ? LTransitionTypeData : LStateTypeData;
+                            var relatedProps = typeData[v];
+                            if(!relatedProps) relatedProps = [];
+                            
+                            for(var i in relatedProps) {
+                                var prop = relatedProps[i];
+
+                                // don't add if already has it
+                                if(t.properties[prop]) continue;
+
+                                var propType = list[prop];
+
+                                var value;
+                                switch(propType) {
+                                    case "int":
+                                    case "float": value = 0; break;
+                                    case "bool": value = false; break;
+                                    case "string":  value = ""; break;
+                                    default: value = 0;
+                                }
+
+                                t.properties[prop] = value;
+                            }
+
+                            if(is_transition)
+                                that.showTransitions(filter);
+                            else
+                                that.onInspectNode(t);
+
                         }});
                         widgets.addSeparator();
                     }else {

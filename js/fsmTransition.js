@@ -14,10 +14,12 @@ var LTransitionProperties = {
     "time": "float",
     "condition": "string",
     "blend_time": "float"
-    // ,
-    // "solo": "bool",
-    // "mute": "bool"
 };
+
+var LTransitionTypeData = {
+    "wait_time": ["time"],
+    "check_variable": ["condition"]
+}
 
 class FSMTransition {
     
@@ -42,7 +44,8 @@ class FSMTransition {
             this.name = this.name.toLowerCase();
     
             this.properties = {
-                type: ""
+                type: "",
+                blend_time: 1
             };
     
             if(!link._data) {
