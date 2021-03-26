@@ -243,7 +243,11 @@ class GraphModule {
                 app["drive"].onDropFile(file);
             }
 
-            app["drive"].tab.click();
+            // change tab if more than one file loaded
+            if(e.dataTransfer.files.length > 1)
+                app["drive"].tab.click();
+            else
+                app["drive"].parseFile(e.dataTransfer.files[0].name)
         });
     }
 
