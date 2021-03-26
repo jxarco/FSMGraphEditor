@@ -184,9 +184,15 @@ class DriveModule {
        
         if(jData)
             LiteGUI.downloadFile(filename, JSON.stringify(jData, null, 4));
+        else
+        {
+            LiteGUI.alert("Can't export file. Check console for more detail", {title: "error"});
+        }
     }
 
     getFSM () {
+
+        var error = false;
 
         var jFsm = {
             initial_state: FSMState.InitialState ? FSMState.InitialState.title : "",
@@ -200,7 +206,7 @@ class DriveModule {
             var state = FSMState.All[i];
             var jState = { name: state.title };
             
-            this.fillProperties(jState, state.properties);
+            error |= this.fillProperties(jState, state.properties);
 
             // for(var p in state.properties) {
             //     jState[p] = state.properties[p];
@@ -232,7 +238,7 @@ class DriveModule {
             jFsm.variables.push(jVariable);
         }
 
-        return jFsm;
+        return error ? null : jFsm;
     }
 
     fillProperties(target, source) {
@@ -251,7 +257,12 @@ class DriveModule {
             if(isBlendSample(p)) {
                 if(!blendSamples) blendSamples = [];
                 var info = prop.split(" ");
-                if(info.length > 2) throw("error exporting blend samples");
+                if(info.length != 2) {
+
+                    console.error("error exporting blend samples");
+                    LiteGUI.alert("Blend sample has no blend factor value", {title: "error"});
+                    return true;
+                }
                 blendSamples.push({ name: info[0], blend_factor: JSON.parse(info[1]) });
             }else {
                 target[p] = prop;
@@ -261,6 +272,8 @@ class DriveModule {
         if(blendSamples) {
             target["animation"] = blendSamples;
         }
+
+        return false;
     }
 
     serialize() {
