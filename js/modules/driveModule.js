@@ -270,7 +270,7 @@ class DriveModule {
         }
 
         if(blendSamples) {
-            target["animation"] = blendSamples;
+            target["anim_samples"] = blendSamples;
         }
 
         return false;
