@@ -19,7 +19,7 @@ var LStateProperties = {
     "loop": "bool",
     "offset": "string",
     "root_motion": "bool",
-    "factor_name": "string",
+    "blend_time": "float",
     "b_sample0": "string",
     "b_sample1": "string",
     "b_sample2": "string",
@@ -29,7 +29,7 @@ var LStateTypeData = {
     "move": ["duration", "offset"],
     "shake": ["amount"],
     "animation": ["anim", "loop", "root_motion"],
-    "blend_animation": ["b_sample0", "b_sample1", "b_sample2", "factor_name", "root_motion"]
+    "blend_animation": ["b_sample0", "b_sample1", "b_sample2", "blend_time", "root_motion"]
 }
 
 //node constructor class
