@@ -6,10 +6,13 @@
 // default state types for offline mode
 var LStateTypes = [
     "",
-    "move",
-    "shake",
-    "animation",
-    "blend_animation"
+    "any",
+    // "move",
+    // "shake",
+    "locomotion",
+    "attack",
+    // "animation",
+    // "blend_animation"
 ];
 
 var LStateProperties = {
@@ -28,8 +31,9 @@ var LStateProperties = {
 var LStateTypeData = {
     "move": ["duration", "offset"],
     "shake": ["amount"],
-    "animation": ["anim", "loop", "root_motion"],
-    "blend_animation": ["b_sample0", "b_sample1", "b_sample2", "blend_time", "root_motion"]
+    "locomotion": ["b_sample0", "b_sample1", "b_sample2", "blend_time", "root_motion"],
+    // "animation": ["anim", "loop", "root_motion"],
+    // "blend_animation": ["b_sample0", "b_sample1", "b_sample2", "blend_time", "root_motion"]
 }
 
 //node constructor class
