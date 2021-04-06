@@ -7,12 +7,12 @@
 var LStateTypes = [
     "",
     "any",
-    // "move",
-    // "shake",
-    "locomotion",
-    "attack",
-    // "animation",
-    // "blend_animation"
+    "move",
+    "shake",
+    // "locomotion",
+    // "attack",
+    "animation",
+    "blend_animation"
 ];
 
 var LStateProperties = {
@@ -23,17 +23,18 @@ var LStateProperties = {
     "offset": "string",
     "root_motion": "bool",
     "blend_time": "float",
-    "b_sample0": "string",
-    "b_sample1": "string",
-    "b_sample2": "string",
+    "sample0": "string",
+    "sample1": "string",
+    "sample2": "string",
 }
 
 var LStateTypeData = {
     "move": ["duration", "offset"],
     "shake": ["amount"],
-    "locomotion": ["b_sample0", "b_sample1", "b_sample2", "blend_time", "root_motion"],
-    // "animation": ["anim", "loop", "root_motion"],
-    // "blend_animation": ["b_sample0", "b_sample1", "b_sample2", "blend_time", "root_motion"]
+    // "attack": ["anim", "loop", "root_motion"],
+    // "locomotion": ["sample0", "sample1", "sample2", "blend_time", "root_motion"],
+    "animation": ["anim", "loop", "root_motion"],
+    "blend_animation": ["sample0", "sample1", "sample2", "blend_time", "root_motion"]
 }
 
 //node constructor class
@@ -44,6 +45,8 @@ function FSMState()
     this.properties = { 
         type: ""
     };
+
+    this.useCustomType = false;
 
     // make the first created node the initial state by default
     if(!FSMState.InitialState) FSMState.InitialState = this;

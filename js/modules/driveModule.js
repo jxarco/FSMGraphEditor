@@ -76,7 +76,7 @@ class DriveModule {
         widgets.addSeparator();
     
         var selectedFilename = this.lastFileLoaded ? this.lastFileLoaded.split(".").shift() : null;
-        widgets.addString("File name", selectedFilename, {placeHolder: "Without extension", callback: function(v){ selectedFilename = v; }});
+        widgets.addString("File name", selectedFilename, {placeHolder: "without extension", callback: function(v){ selectedFilename = v; }});
         widgets.addSpace(5);
         widgets.widgets_per_row = 2;
         widgets.addButton(null, "Export scene (.fsmgraph)", {callback: function(){
@@ -207,11 +207,7 @@ class DriveModule {
             var jState = { name: state.title };
             
             error |= this.fillProperties(jState, state.properties);
-
-            // for(var p in state.properties) {
-            //     jState[p] = state.properties[p];
-            // }
-
+            if(state.useCustomType) jState.type = state.title.toLowerCase();
             jFsm.states.push(jState);
         }
 
@@ -244,7 +240,7 @@ class DriveModule {
     fillProperties(target, source) {
 
         function isBlendSample(str) {
-            return str.includes("b_sample");
+            return str.includes("sample");
         }
 
         var blendSamples = null;

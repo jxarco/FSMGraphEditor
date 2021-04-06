@@ -87,6 +87,5 @@ FSMVariable.Sort = function(p) {
     this.sort = -this.sort;
 }
 
-// testing
+// by default variables
 FSMVariable.All.push( new FSMVariable("enabled", "bool", false) );
-FSMVariable.All.push( new FSMVariable("last_animation_loop_id", "int", -1) );

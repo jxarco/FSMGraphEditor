@@ -7226,8 +7226,8 @@ LGraphNode.prototype.executeAction = function(action)
         ctx.fillStyle = "#888";
         if (this.graph) {
             //ctx.fillText( "T: " + this.graph.globaltime.toFixed(2) + "s", 5, 13 * 1 );
-            ctx.fillText("L: " + Object.keys(this.graph.links).length, 5, 13 * 2 );
-            ctx.fillText("N: " + this.graph._nodes.length + " [" + this.visible_nodes.length + "]", 5, 13 * 3 );
+            ctx.fillText("T: " + Object.keys(this.graph.links).length, 5, 13 * 2 );
+            ctx.fillText("S: " + this.graph._nodes.length + " [" + this.visible_nodes.length + "]", 5, 13 * 3 );
             ctx.fillText("FPS:" + this.fps.toFixed(2), 5, 13 * 4);
         } else {
             ctx.fillText("No graph selected", 5, 13 * 1);

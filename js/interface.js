@@ -28,6 +28,8 @@ var Interface = {
         // settings
         this.settings_area = new LiteGUI.Area({id :"settingsarea", content_id:"settings-area", autoresize: true, inmediateResize: true});
         this.settings_area.content.style.fontSize = "17px";
+        this.settings_area.content.style.height = "calc(100% - 30px)";
+        this.settings_area.content.style.overflowY = "scroll";
 
         // drive
         this.drive_area = new LiteGUI.Area({id :"drivearea", content_id:"drive-area", autoresize: true, inmediateResize: true});
@@ -84,18 +86,26 @@ var Interface = {
         
         widgets.clear();
         widgets.addSection("State");
-        widgets.widgets_per_row = 2;
-        widgets.addString("Name", node.title, {width: "65%", name_width: "40%", callback: function(v){ 
+        widgets.widgets_per_row = 1;
+        widgets.addString("Name", node.title, {name_width: "50%", callback: function(v){ 
             if(app["graph"]) 
                 app["graph"].processStateRenamed(node, v);
+            that.onInspectNode(node);
         }} );
-        widgets.addString("ID", node.id, {width: "30%", name_width: "30%", disabled: true} );
+        // widgets.addString("ID", node.id, {width: "30%", name_width: "30%", disabled: true} );
         widgets.widgets_per_row = 1;
+        widgets.addCheckbox("Export as type name", node.useCustomType, {name_width: "50%", callback: function(v){
+            node.useCustomType = v;
+            that.onInspectNode(node);
+        }});
+        if(node.useCustomType) {
+            widgets.addString(null, node.title.toLowerCase(), {name_width: "50%", disabled: true});
+        }
+        widgets.addSeparator();
         widgets.addVector2("Position", node.pos, {callback: function(v){ 
             node.pos = v; 
             if(app["graph"]) app["graph"].redraw();
         }});
-        widgets.addSeparator();
 
         that.showProperties(node, LStateProperties, LStateTypes);
 
