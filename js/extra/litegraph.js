@@ -2374,6 +2374,10 @@
             this.title = this.constructor.title;
         }
 
+        if (info.useCustomType) {
+            this.useCustomType = info.useCustomType;
+        }
+
         if (this.onConnectionsChange) {
             if (this.inputs) {
                 for (var i = 0; i < this.inputs.length; ++i) {
@@ -2504,6 +2508,10 @@
         }
         if (this.shape) {
             o.shape = this.shape;
+        }
+
+        if(this.useCustomType) {
+            o.useCustomType = this.useCustomType;
         }
 
         if (this.onSerialize) {
