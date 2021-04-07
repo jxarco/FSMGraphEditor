@@ -26,6 +26,7 @@ var LStateProperties = {
     "sample0": "string",
     "sample1": "string",
     "sample2": "string",
+    "timings": "string"
 }
 
 var LStateTypeData = {
