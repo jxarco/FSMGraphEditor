@@ -231,7 +231,13 @@ var Interface = {
                     func = widgets.addNumber.bind(widgets);
                     break;
                 case String:
-                    if(p == "type") {
+                    if(p == "cancel") {
+                        var cancel_list = ["DEFAULT", "ON HIT", "ON DECISION", "ON ANY"];
+                        widgets.addCombo("cancel mode", value, {values: cancel_list, name_width: "40%", callback: function(v){
+                            t.properties[p] = v;
+                        }});
+                    }
+                    else if(p == "type") {
                         widgets.addCombo(p, value, {values: type_list, name_width: "40%", callback: function(v){
                             var lastBlendTime = t.properties["blend_time"];
                             t.properties = {
@@ -352,6 +358,8 @@ var Interface = {
                             case "string":  value = ""; break;
                             default: value = 0;
                         }
+
+                        if(i == "cancel") value = "DEFAULT";
                         t.properties[i] = value;
 
                         if(is_transition)

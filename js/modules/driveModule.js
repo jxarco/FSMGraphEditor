@@ -260,6 +260,9 @@ class DriveModule {
                     return true;
                 }
                 blendSamples.push({ name: info[0], blend_factor: JSON.parse(info[1]) });
+            }else if(p == "cancel"){
+                var tkns = prop.toLowerCase().split(" ");
+                target[p] = tkns.join("_");
             }else {
                 target[p] = prop;
             }
