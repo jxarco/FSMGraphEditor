@@ -274,7 +274,9 @@ class DriveModule {
 
     serialize() {
 
-        var fsm = {};
+        var fsm = {
+            initial_state: FSMState.InitialState ? FSMState.InitialState.title : ""
+        };
 
         // serialize transitions info
         // hace falta?
@@ -335,6 +337,8 @@ class DriveModule {
 
         var fsm_data = data.fsm;
         if(!fsm_data) return;
+
+        FSMState.InitialState = FSMState.GetByName(fsm_data.initial_state);
 
         // update links info
         for(var i = 0; i < fsm_data.transitions.length; ++i) {
