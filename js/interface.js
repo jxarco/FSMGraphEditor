@@ -94,12 +94,15 @@ var Interface = {
         }} );
         // widgets.addString("ID", node.id, {width: "30%", name_width: "30%", disabled: true} );
         widgets.widgets_per_row = 1;
-        widgets.addCheckbox("Export as type name", node.useCustomType, {name_width: "50%", callback: function(v){
+        widgets.addCheckbox("Export custom type", node.useCustomType, {name_width: "50%", callback: function(v){
             node.useCustomType = v;
+            node.customType = node.title.toLowerCase();
             that.onInspectNode(node);
         }});
         if(node.useCustomType) {
-            widgets.addString(null, node.title.toLowerCase(), {name_width: "50%", disabled: true});
+            widgets.addString(null, node.customType, {name_width: "50%", callback: function(v){
+                node.customType = v;
+            }});
         }
         widgets.addSeparator();
         widgets.addVector2("Position", node.pos, {callback: function(v){ 

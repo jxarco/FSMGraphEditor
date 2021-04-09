@@ -207,7 +207,7 @@ class DriveModule {
             var jState = { name: state.title };
             
             error |= this.fillProperties(jState, state.properties);
-            if(state.useCustomType) jState.type = state.title.toLowerCase();
+            if(state.useCustomType) jState.type = state.customType;
             jFsm.states.push(jState);
         }
 
