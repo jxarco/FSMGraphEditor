@@ -2378,6 +2378,10 @@
             this.useCustomType = info.useCustomType;
         }
 
+        if (info.customType) {
+            this.customType = info.customType;
+        }
+
         if (this.onConnectionsChange) {
             if (this.inputs) {
                 for (var i = 0; i < this.inputs.length; ++i) {
@@ -2512,6 +2516,10 @@
 
         if(this.useCustomType) {
             o.useCustomType = this.useCustomType;
+        }
+
+        if(this.customType) {
+            o.customType = this.customType;
         }
 
         if (this.onSerialize) {
