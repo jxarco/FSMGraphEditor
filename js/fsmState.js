@@ -28,7 +28,8 @@ var LStateProperties = {
     "sample1": "string",
     "sample2": "string",
     "timings": "string",
-    "cancel": "string"
+    "cancel": "string",
+    "callbacks": "string"
 }
 
 var LStateTypeData = {

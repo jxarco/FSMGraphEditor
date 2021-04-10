@@ -263,6 +263,12 @@ class DriveModule {
             }else if(p == "cancel"){
                 var tkns = prop.toLowerCase().split(" ");
                 target[p] = tkns.join("_");
+            }else if(p == "callbacks"){
+                var tkns = prop.replace(/\s/g, "").split(",");
+                target[p] = [];
+                for(var t in tkns){
+                    target[p].push(tkns[t]);
+                }
             }else {
                 target[p] = prop;
             }
