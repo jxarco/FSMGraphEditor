@@ -13,8 +13,7 @@ var LTransitionTypes = [
 var LTransitionProperties = {
     "time": "float",
     "condition": "string",
-    "blend_time": "float",
-    "target_anim": "string"
+    "blend_time": "float"
 };
 
 var LTransitionTypeData = {

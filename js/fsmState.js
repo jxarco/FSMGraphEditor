@@ -22,6 +22,8 @@ var LStateProperties = {
     "loop": "bool",
     "offset": "string",
     "root_motion": "bool",
+    "keep_action": "bool",
+    "back_cycle": "string",
     "blend_time": "float",
     "blend_out": "float",
     "sample0": "string",
@@ -35,9 +37,7 @@ var LStateProperties = {
 var LStateTypeData = {
     "move": ["duration", "offset"],
     "shake": ["amount"],
-    // "attack": ["anim", "loop", "root_motion"],
-    // "locomotion": ["sample0", "sample1", "sample2", "blend_time", "root_motion"],
-    "animation": ["anim", "loop", "root_motion", "blend_out"],
+    "animation": ["anim", "loop", "root_motion", "keep_action", "back_cycle", "blend_out"],
     "blend_animation": ["sample0", "sample1", "sample2", "blend_time", "root_motion"]
 }
 
