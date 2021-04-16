@@ -7,7 +7,8 @@ LVariableTypes = [
     "int",
     "float",
     "bool",
-    "string"
+    "string",
+    "vec3"
 ];
 
 class FSMVariable {
@@ -27,6 +28,7 @@ class FSMVariable {
                 case "float": this.value = 0; break;
                 case "bool": this.value = false; break;
                 case "string": this.value = ""; break;
+                case "vec3": this.value = new Float32Array(3); break;
                 default: this.value = 0;
             }
         }
@@ -39,6 +41,7 @@ class FSMVariable {
             case "float": if(this.value.constructor !== Number) this.value = null; break;
             case "bool": if(this.value.constructor !== Boolean) this.value = null; break;
             case "string": if(this.value.constructor !== String) this.value = null; break;
+            case "vec3": if(this.value.constructor !== Float32Array) this.value = null; break;
         }
     }
 
@@ -51,7 +54,6 @@ class FSMVariable {
         switch(this.type) {
 
             case "int":
-
                 var fraction = getDecimalFraction(this.value);
 
                 // convert value to int
@@ -60,6 +62,15 @@ class FSMVariable {
                     console.warn("Variable " + this.name + " converted to integer (" + this.value + " to " + value + ")");
                 }
 
+                break;
+            case "vec3":
+                // stringify vector: [1, 2, 3] -> "1 2 3"
+                var string = "";
+                for(var i in value){
+                    string += " " + value[i];
+                }
+
+                value = string.substr(1);
                 break;
             // ...
         }

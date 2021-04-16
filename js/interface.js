@@ -426,7 +426,7 @@ var Interface = {
             e.preventDefault();
 
             var options = [];
-            var types = ["int", "float", "bool", "string"];
+            var types = LVariableTypes;
 
             for(let i in types) {
                 options.push({
@@ -465,11 +465,11 @@ var Interface = {
         for(var i in FSMVariable.All) {
 
             let variable = FSMVariable.All[i];
-            let is_string = variable.type == "string";
+            let is_large = variable.type == "string" || variable.type == "vec3";
 
             if(!variable.name.includes(filter)) continue;
 
-            var el = widgets.addString(null, variable.name, {width: is_string ? "30%" : "70%", callback: function(v) {
+            var el = widgets.addString(null, variable.name, {width: is_large ? "30%" : "70%", callback: function(v) {
                 variable.name = v; 
                 that.showVariables(filter); 
             }});
@@ -492,7 +492,8 @@ var Interface = {
                                 {title: "int"},
                                 {title: "float"},
                                 {title: "bool"},
-                                {title: "string"}
+                                {title: "string"},
+                                {title: "vec3"}
                             ]
                         }
                     },
@@ -512,6 +513,7 @@ var Interface = {
                     case "float": variable.value = 0; break;
                     case "bool": variable.value = false; break;
                     case "string": variable.value = ""; break;
+                    case "vec3": variable.value = new Float32Array(3); break;
                     default: variable.value = 0;
                 }
 
@@ -522,6 +524,11 @@ var Interface = {
 
             switch(value.constructor)
             {
+                case Float32Array:
+                    func = widgets.addVector3(null, value, {width: "70%", callback: function(v){
+                        variable.value = v;
+                    }});
+                    break;
                 case Number:
                     var precision = variable.type == "float" ? 3 : 0;
                     func = widgets.addNumber(null, value, {precision: precision, width: "30%", callback: function(v){
