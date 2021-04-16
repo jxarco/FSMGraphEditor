@@ -296,9 +296,21 @@ var Interface = {
             }
 
             if(func) {
-                var precision = list[p] == "float" ? 3 : 0;
-                var is_string = list[p] == "string";
-                var propWidget = func(p, value, {precision: precision, name_width: is_string ? "35%" : "70%", callback: function(v){
+
+                var var_type = list[p];
+                var string_name_width = "35%";
+                var prop_name = "<b>" + p + "</b>";
+
+                if(!var_type) {
+                    var gparent = FSMState.GetGroupParent(p);
+                    var_type = LStatePropertyGroups[gparent][p];
+                    string_name_width = "50%";
+                    prop_name = p;
+                }
+
+                var precision = var_type == "float" ? 3 : 0;
+                var is_string = var_type == "string";
+                var propWidget = func(prop_name, value, {precision: precision, name_width: is_string ? string_name_width : "70%", callback: function(v){
 
                     // check it first side if a valid variable
                     if(is_transition && p == "condition") {
@@ -322,7 +334,7 @@ var Interface = {
                     }
                 }});
 
-                propWidget.querySelector(".wname").classList.add(list[p]);
+                propWidget.querySelector(".wname").classList.add(var_type);
                 propWidget.addEventListener("contextmenu", function(e){
 
                     e.preventDefault();
@@ -354,25 +366,34 @@ var Interface = {
                 // transition already has property
                 if(t.properties[i] !== undefined) continue;
 
+                function inner_add(p, _list){
+                    var value;
+                    switch(_list[p]) {
+                        case "int":
+                        case "float": value = 0; break;
+                        case "bool": value = false; break;
+                        case "string":  value = ""; break;
+                        case "group":  
+                        for(var gp in LStatePropertyGroups[p]){
+                            inner_add(gp, LStatePropertyGroups[p]);
+                        }
+                        return; // exit now
+                        default: value = 0;
+                    }
+
+                    if(p == "cancel") value = "DEFAULT";
+                    t.properties[p] = value;
+
+                    if(is_transition)
+                        that.showTransitions(filter);
+                    else
+                        that.onInspectNode(t);
+                }
+
                 options.push({
                     title: i,
                     callback: function(){
-                        var value;
-                        switch(list[i]) {
-                            case "int":
-                            case "float": value = 0; break;
-                            case "bool": value = false; break;
-                            case "string":  value = ""; break;
-                            default: value = 0;
-                        }
-
-                        if(i == "cancel") value = "DEFAULT";
-                        t.properties[i] = value;
-
-                        if(is_transition)
-                        that.showTransitions(filter);
-                        else
-                        that.onInspectNode(t);
+                        inner_add(i, list);
                     }
                 });
             }
@@ -537,7 +558,7 @@ var Interface = {
         var pipeline = "SKIN";
 
         var supported_textures = ["albedo", "normal", "roughness", "metallic"];
-        var textures = {"albedo": "..."};
+        var textures = {"albedo": true};
 
         widgets.on_refresh = function(){
             widgets.clear();
@@ -556,7 +577,7 @@ var Interface = {
                         options.push({
                             title: supported_textures[i],
                             callback: function(){
-                                textures[supported_textures[i]] = "...";
+                                textures[supported_textures[i]] = true;
                                 widgets.on_refresh();
                             }
                         });
@@ -575,7 +596,9 @@ var Interface = {
             widgets.addInfo(null, "'folder/name' don't write extension")
             widgets.addInfo(null, "ex: 'eon/eonhood' exports: 'data/textures/eon/eonhood.dds'")
             for(let t in textures){
-                widgets.addString(t, textures[t], {callback: function(v){
+                var tex_name = textures[t];
+                if(tex_name == true) tex_name = "";
+                widgets.addString(t, tex_name, {placeHolder: "texture name", callback: function(v){
                     textures[t] = v;
                 }});
             }
@@ -590,7 +613,12 @@ var Interface = {
                 var foo = {};
                 
                 for(let t in textures){
-                    foo[t] = textures[t] + ".dds";
+                    if(textures[t] == true) // unnamed
+                    {
+                        LiteGUI.alert("Texture " + t + " needs a name",{title: "error"});
+                        return;
+                    }
+                    foo[t] = "data/textures/" + textures[t] + ".dds";
                 }
 
                 var pexport = "";

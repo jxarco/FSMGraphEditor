@@ -218,8 +218,8 @@ class SettingsModule {
         });
 
         widgets.addSeparator();
+        
         // properties
-
         var propertiesRegistered = Object.keys(properties_list);
         var regInfo = widgets.addInfo(null, "Registered properties (" + propertiesRegistered.length + ")");
         regInfo.style.fontWeight = "bold";
@@ -265,7 +265,7 @@ class SettingsModule {
         widgets.addSpace(7);
         widgets.widgets_per_row = 2;
         for(let p in properties_list) {
-        
+            if(properties_list[p] == "group") continue;
             var info = widgets.addInfo(p, "", {name_width: "100%"});
             info.querySelector(".wname").classList.add(properties_list[p]);
 

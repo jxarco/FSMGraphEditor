@@ -7,36 +7,48 @@
 var LStateTypes = [
     "",
     "any",
-    "move",
-    "shake",
-    // "locomotion",
-    // "attack",
+    // "move",
+    // "shake",
     "animation",
     "blend_animation"
 ];
 
 var LStateProperties = {
-    "duration": "float",
+    // "duration": "float",
+    // "amount": "float",
+    // "offset": "string",
     "anim": "string",
-    "amount": "float",
     "loop": "bool",
-    "offset": "string",
     "root_motion": "bool",
     "keep_action": "bool",
     "back_cycle": "string",
     "blend_time": "float",
     "blend_out": "float",
-    "sample0": "string",
-    "sample1": "string",
-    "sample2": "string",
+    "blendspace": "group",
     "timings": "string",
     "cancel": "string",
-    "callbacks": "string"
+    "callbacks": "string",
+    "async": "group"
+}
+
+var LStatePropertyGroups = {
+    "blendspace": {
+        "bldspace_sample0": "string",
+        "bldspace_sample1": "string",
+        "bldspace_sample2": "string"
+    },
+    "async": {
+        "async_name": "string",
+        "async_blendIn": "float",
+        "async_blendOut": "float",
+        "async_interval": "float",
+        "async_randomInterval": "bool"
+    }
 }
 
 var LStateTypeData = {
-    "move": ["duration", "offset"],
-    "shake": ["amount"],
+    // "move": ["duration", "offset"],
+    // "shake": ["amount"],
     "animation": ["anim", "loop", "root_motion", "keep_action", "back_cycle", "blend_out"],
     "blend_animation": ["sample0", "sample1", "sample2", "blend_time", "root_motion"]
 }
@@ -93,6 +105,13 @@ FSMState.GetByName = function(name) { return FSMState.All[name] }
 FSMState.RemoveByName = function(name) { delete FSMState.All[name]; }
 FSMState.Add = function(name, node) { FSMState.All[name] = node; }
 FSMState.ClearAll = function() { FSMState.All = {}; }
+FSMState.GetGroupParent = function(p){
+    for(var i in LStatePropertyGroups){
+        for(var j in LStatePropertyGroups[i]){
+            if(j == p) return i;
+        }
+    }
+};
 
 //register in the system
 LiteGraph.registerNodeType("states/default", FSMState );

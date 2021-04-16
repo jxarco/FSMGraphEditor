@@ -250,6 +250,7 @@ class DriveModule {
             var prop = source[p];
 
             // check any special cases
+            // its a group but i want to do it different for blending samples
             if(isBlendSample(p)) {
                 if(!blendSamples) blendSamples = [];
                 var info = prop.split(" ");
@@ -269,6 +270,15 @@ class DriveModule {
                 for(var t in tkns){
                     target[p].push(tkns[t]);
                 }
+            }
+            // it's a group
+            else if(!LStateProperties[p] && p != "type"){
+                var gparent = FSMState.GetGroupParent(p);
+                // first time filling this
+                if(target[gparent] == undefined) target[gparent] = {};
+                // fill same way
+                p = p.replace(gparent+"_", "");
+                target[gparent][p] = prop;
             }else {
                 target[p] = prop;
             }
