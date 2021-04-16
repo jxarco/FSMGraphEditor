@@ -524,7 +524,7 @@ var Interface = {
     openMaterialFileExporter() {
         
         var that = this;
-        var w = 400;
+        var w = 450;
         var title = "Material file exporter";
         var dialog_id = title.replace(/\s/g, "").toLowerCase();
         document.querySelectorAll( "#" + dialog_id ).forEach( e => e.remove() );
@@ -534,21 +534,51 @@ var Interface = {
         var pipelines = ["BASIC", "SKIN"];
 
         var name = "";
-        var path = "";
         var pipeline = "SKIN";
+
+        var supported_textures = ["albedo", "normal", "roughness", "metallic"];
+        var textures = {"albedo": "..."};
 
         widgets.on_refresh = function(){
             widgets.clear();
-
-            widgets.addString("Name", name, {callback: function(v){
+            widgets.widgets_per_row = 2;
+            widgets.addString("Name", name, {width: "70%", placeHolder: "material name", callback: function(v){
                 name = v;
             }});
-            widgets.addSeparator();
-            widgets.addString("Albedo", path, {callback: function(v){
-                path = v;
-                widgets.on_refresh();
+            widgets.addButton(null, "add texture", {width: "30%", callback: function(v, e){
+                e.preventDefault();
+
+                var options = [];
+
+                for(let i in supported_textures){
+
+                    if(!textures[supported_textures[i]])
+                        options.push({
+                            title: supported_textures[i],
+                            callback: function(){
+                                textures[supported_textures[i]] = "...";
+                                widgets.on_refresh();
+                            }
+                        });
+                }
+
+                if(options.length)
+                    new LiteGraph.ContextMenu( options, { event: e});
+                else
+                    new LiteGraph.ContextMenu( [{
+                        title: "No supported textures",
+                        disabled: true
+                    }], { event: e});
             }});
-            widgets.addString(null, "data/textures/" + path + ".dds", {disabled: true});
+            widgets.widgets_per_row = 1;
+            widgets.addSeparator();
+            widgets.addInfo(null, "'folder/name' don't write extension")
+            widgets.addInfo(null, "ex: 'eon/eonhood' exports: 'data/textures/eon/eonhood.dds'")
+            for(let t in textures){
+                widgets.addString(t, textures[t], {callback: function(v){
+                    textures[t] = v;
+                }});
+            }
             widgets.addSeparator();
     
             widgets.addCombo("Pipeline", pipeline, {values: pipelines, callback: function(v){
@@ -557,10 +587,12 @@ var Interface = {
             widgets.addSeparator();
             widgets.addButton(null, "Export", {callback: function(){
     
-                var foo = {
-                    "albedo": "data/textures/" + path + ".dds"
-                };
+                var foo = {};
                 
+                for(let t in textures){
+                    foo[t] = textures[t] + ".dds";
+                }
+
                 var pexport = "";
                 var skin = false;
 
@@ -572,6 +604,7 @@ var Interface = {
                 foo["pipeline"] = pexport;
 
                 if(skin) foo["uses_skin"] = true;
+                if(!name.length) name = "unnamed";
                 LiteGUI.downloadFile(name + ".mat", JSON.stringify(foo, null, 4));
             }});
             widgets.addSeparator();
@@ -579,13 +612,14 @@ var Interface = {
 
         widgets.on_refresh();
         dialog.add(widgets);
-        dialog.show('fade');
+        dialog.makeModal('fade');
+        dialog.setPosition(window.innerWidth/2 - w/2, 150);
     },
 
     openSkeletonFileExporter() {
         
         var that = this;
-        var w = 400;
+        var w = 450;
         var title = "Skeleton file exporter";
         var dialog_id = title.replace(/\s/g, "").toLowerCase();
         document.querySelectorAll( "#" + dialog_id ).forEach( e => e.remove() );
@@ -596,16 +630,19 @@ var Interface = {
         var animations = [];
         var meshes = [];
 
-        widgets.addString("Name", "", {callback: function(v){
+        widgets.addString("Name", "", {placeHolder: "skeleton name", callback: function(v){
             name = v;
         }});
-        widgets.addTextarea("Animations", "", {callback: function(v){
+        widgets.addSeparator();
+        widgets.addInfo(null, "No folder, only animation and mesh names!");
+        widgets.addInfo(null, "Separated by lines");
+        widgets.addTextarea("Animations", "", {height: "100px", callback: function(v){
             var tkns = v.split("\n");
             for(var t in tkns) {
                 animations.push( tkns[t].replace(/\s/g, "") );
             }
         }});
-        widgets.addTextarea("Meshes", "", {callback: function(v){
+        widgets.addTextarea("Meshes", "", {height: "100px", callback: function(v){
             var tkns = v.split("\n");
             for(var t in tkns) {
                 meshes.push( tkns[t].replace(/\s/g, "") );
@@ -627,10 +664,12 @@ var Interface = {
                 } );
             }
 
+            if(!name.length) name = "unnamed";
             LiteGUI.downloadFile(name + ".skeleton", JSON.stringify(foo, null, 4));
         }});
         widgets.addSeparator();
         dialog.add(widgets);
-        dialog.show('fade');
+        dialog.makeModal('fade');
+        dialog.setPosition(window.innerWidth/2 - w/2, 150);
     }
 }
