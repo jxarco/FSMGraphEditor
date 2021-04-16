@@ -50,10 +50,14 @@ var Interface = {
 
     createMenuBar() {
 
+        var that = this;
+
         //create menubar
 		LiteGUI.createMenubar(null,{sort_entries: false});
 
         LiteGUI.menubar.add("File/New", { callback: app["graph"].reset.bind(app["graph"])  });
+        LiteGUI.menubar.add("Tools/Material file exporter", { callback: that.openMaterialFileExporter.bind(that)});
+        LiteGUI.menubar.add("Tools/Skeleton file exporter", { callback: that.openSkeletonFileExporter.bind(that)});
         LiteGUI.menubar.add("About/Author: @jxarco", { disabled: true });
         LiteGUI.menubar.add("About/Using litegraph.js and litegui.js (@jagenjo)", { disabled: true });
     },
@@ -515,5 +519,118 @@ var Interface = {
                     break;
             }
         }
+    },
+
+    openMaterialFileExporter() {
+        
+        var that = this;
+        var w = 400;
+        var title = "Material file exporter";
+        var dialog_id = title.replace(/\s/g, "").toLowerCase();
+        document.querySelectorAll( "#" + dialog_id ).forEach( e => e.remove() );
+        var dialog = new LiteGUI.Dialog( {id: dialog_id, parent: "body", title: title, close: true, width: w, draggable: true });
+        var widgets = new LiteGUI.Inspector();
+        
+        var pipelines = ["BASIC", "SKIN"];
+
+        var name = "";
+        var path = "";
+        var pipeline = "SKIN";
+
+        widgets.on_refresh = function(){
+            widgets.clear();
+
+            widgets.addString("Name", name, {callback: function(v){
+                name = v;
+            }});
+            widgets.addSeparator();
+            widgets.addString("Albedo", path, {callback: function(v){
+                path = v;
+                widgets.on_refresh();
+            }});
+            widgets.addString(null, "data/textures/" + path + ".dds", {disabled: true});
+            widgets.addSeparator();
+    
+            widgets.addCombo("Pipeline", pipeline, {values: pipelines, callback: function(v){
+                pipeline = v;
+            }});
+            widgets.addSeparator();
+            widgets.addButton(null, "Export", {callback: function(){
+    
+                var foo = {
+                    "albedo": "data/textures/" + path + ".dds"
+                };
+                
+                var pexport = "";
+                var skin = false;
+
+                switch(pipeline){
+                    case "SKIN": pexport = "objs_skin.pipeline"; skin = true; break;
+                    case "BASIC": pexport = "objs.pipeline"; break;
+                }
+
+                foo["pipeline"] = pexport;
+
+                if(skin) foo["uses_skin"] = true;
+                LiteGUI.downloadFile(name + ".mat", JSON.stringify(foo, null, 4));
+            }});
+            widgets.addSeparator();
+        }
+
+        widgets.on_refresh();
+        dialog.add(widgets);
+        dialog.show('fade');
+    },
+
+    openSkeletonFileExporter() {
+        
+        var that = this;
+        var w = 400;
+        var title = "Skeleton file exporter";
+        var dialog_id = title.replace(/\s/g, "").toLowerCase();
+        document.querySelectorAll( "#" + dialog_id ).forEach( e => e.remove() );
+        var dialog = new LiteGUI.Dialog( {id: dialog_id, parent: "body", title: title, close: true, width: w, draggable: true });
+        var widgets = new LiteGUI.Inspector();
+        
+        var name = "";
+        var animations = [];
+        var meshes = [];
+
+        widgets.addString("Name", "", {callback: function(v){
+            name = v;
+        }});
+        widgets.addTextarea("Animations", "", {callback: function(v){
+            var tkns = v.split("\n");
+            for(var t in tkns) {
+                animations.push( tkns[t].replace(/\s/g, "") );
+            }
+        }});
+        widgets.addTextarea("Meshes", "", {callback: function(v){
+            var tkns = v.split("\n");
+            for(var t in tkns) {
+                meshes.push( tkns[t].replace(/\s/g, "") );
+            }
+        }});
+        widgets.addSeparator();
+
+        widgets.addButton(null, "Export", {callback: function(){
+
+            var foo = {
+                "name": name,
+                "anims": [],
+                "meshes": meshes
+            };
+
+            for(var a in animations) {
+                foo["anims"].push( {
+                    "name": animations[a]
+                } );
+            }
+
+            LiteGUI.downloadFile(name + ".skeleton", JSON.stringify(foo, null, 4));
+        }});
+        widgets.addSeparator();
+        dialog.add(widgets);
+        dialog.show('fade');
     }
 }

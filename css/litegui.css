@@ -390,6 +390,7 @@ input.text.number.full:hover{
 	width: -moz-calc(100% - 4px);
 	width: -webkit-calc(100% - 4px);
 	width: calc(100% - 4px);
+	background-color: #282828;
 }
 
 .inspector .wcontent .inputfield.button {
