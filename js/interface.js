@@ -469,7 +469,7 @@ var Interface = {
 
             if(!variable.name.includes(filter)) continue;
 
-            var el = widgets.addString(null, variable.name, {width: is_large ? "30%" : "70%", callback: function(v) {
+            var el = widgets.addString(null, variable.name, {width: is_large ? "40%" : "70%", callback: function(v) {
                 variable.name = v; 
                 that.showVariables(filter); 
             }});
@@ -525,18 +525,19 @@ var Interface = {
             switch(value.constructor)
             {
                 case Float32Array:
-                    func = widgets.addVector3(null, value, {width: "70%", callback: function(v){
+                    var precision = 2;
+                    func = widgets.addVector3(null, value, {precision: precision, width: "60%", callback: function(v){
                         variable.value = v;
                     }});
                     break;
                 case Number:
-                    var precision = variable.type == "float" ? 3 : 0;
+                    var precision = variable.type == "float" ? 2 : 0;
                     func = widgets.addNumber(null, value, {precision: precision, width: "30%", callback: function(v){
                         variable.value = v;
                     }});
                     break;
                 case String:
-                    func = widgets.addString(null, value, {width: "70%", callback: function(v){
+                    func = widgets.addString(null, value, {width: "60%", callback: function(v){
                         variable.value = v;
                     }});
                     break;
