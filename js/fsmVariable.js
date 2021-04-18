@@ -41,8 +41,20 @@ class FSMVariable {
             case "float": if(this.value.constructor !== Number) this.value = null; break;
             case "bool": if(this.value.constructor !== Boolean) this.value = null; break;
             case "string": if(this.value.constructor !== String) this.value = null; break;
-            case "vec3": if(this.value.constructor !== Float32Array) this.value = null; break;
+            case "vec3": 
+                if(this.value.constructor !== String) {
+                    this.value = null; break;
+                }
+                this.fillVEC3(this.value);
+                break;
         }
+    }
+
+    fillVEC3(str) {
+        this.value = new Float32Array(3);
+        var tkns = str.split(" ");
+        for(var i = 0; i < 3; ++i)
+        this.value[i] = parseFloat(tkns[i]);
     }
 
     serialize() {
