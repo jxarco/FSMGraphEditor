@@ -629,17 +629,9 @@ var Interface = {
                     foo[t] = "data/textures/" + textures[t] + ".dds";
                 }
 
-                var pexport = "";
-                var skin = false;
-
-                switch(pipeline){
-                    case "SKIN": pexport = "objs_skin.pipeline"; skin = true; break;
-                    case "BASIC": pexport = "objs.pipeline"; break;
-                }
-
-                foo["pipeline"] = pexport;
-
-                if(skin) foo["uses_skin"] = true;
+                foo["pipeline"] = "objs.pipeline";
+                if(pipeline == "SKIN") foo["uses_skin"] = true;
+                
                 if(!name.length) name = "unnamed";
                 LiteGUI.downloadFile(name + ".mat", JSON.stringify(foo, null, 4));
             }});
