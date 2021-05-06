@@ -254,13 +254,18 @@ class DriveModule {
             if(isBlendSample(p)) {
                 if(!blendSamples) blendSamples = [];
                 var info = prop.split(" ");
-                if(info.length != 2) {
+                if(info.length < 3 || info.length > 4) {
 
                     console.error("error exporting blend samples");
                     LiteGUI.alert("Blend sample has no blend factor value", {title: "error"});
                     return true;
+                }else{
+
+                    var anim_name = info.shift();
+                    var bpoint = info.join(" ");
+
+                    blendSamples.push({ name: anim_name, blend_point: bpoint });
                 }
-                blendSamples.push({ name: info[0], blend_factor: JSON.parse(info[1]) });
             }else if(p == "cancel"){
                 var tkns = prop.toLowerCase().split(" ");
                 target[p] = tkns.join("_");

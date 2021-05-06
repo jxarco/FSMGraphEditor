@@ -49,8 +49,8 @@ var LStatePropertyGroups = {
 var LStateTypeData = {
     // "move": ["duration", "offset"],
     // "shake": ["amount"],
-    "animation": ["anim", "loop", "root_motion", "keep_action", "back_cycle", "blend_out"],
-    "blend_animation": ["bldspace_sample0", "bldspace_sample1", "bldspace_sample2", "blend_time", "root_motion"]
+    "animation": ["anim", "loop", "root_motion", "keep_action", "back_cycle", "blend_out"]
+    // "blend_animation": ["blendspace", "blend_time", "root_motion"]
 }
 
 //node constructor class
