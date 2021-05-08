@@ -254,7 +254,7 @@ class DriveModule {
             if(isBlendSample(p)) {
                 if(!blendSamples) blendSamples = [];
                 var info = prop.split(" ");
-                if(info.length < 3 || info.length > 4) {
+                if(info.length != 3) {
 
                     console.error("error exporting blend samples");
                     LiteGUI.alert("Blend sample has no blend factor value", {title: "error"});
