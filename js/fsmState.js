@@ -42,7 +42,9 @@ var LStatePropertyGroups = {
         "async_blendIn": "float",
         "async_blendOut": "float",
         "async_interval": "float",
-        "async_randomInterval": "bool"
+        "async_randomInterval": "bool",
+        "async_restrictToBlendFactor": "bool",
+        "async_blendFactorRestriction": "string"
     }
 }
 

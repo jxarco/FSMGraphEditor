@@ -360,44 +360,70 @@ var Interface = {
                 {title: "Properties", disabled: true}, null
             ];
 
+            function inner_add(p, _list){
+                var value;
+                switch(_list[p]) {
+                    case "int":
+                    case "float": value = 0; break;
+                    case "bool": value = false; break;
+                    case "string":  value = ""; break;
+                    case "group":  
+                    for(var gp in LStatePropertyGroups[p]){
+                        inner_add(gp, LStatePropertyGroups[p]);
+                    }
+                    return; // exit now
+                    default: value = 0;
+                }
+
+                if(p == "cancel") value = "DEFAULT";
+                t.properties[p] = value;
+
+                if(is_transition)
+                    that.showTransitions(filter);
+                else
+                    that.onInspectNode(t);
+            }
+
             for(let i in list) {
 
                 // transition already has property
-                if(t.properties[i] !== undefined) continue;
+                if(t.properties[i] !== undefined) 
+                continue;
 
-                function inner_add(p, _list){
-                    var value;
-                    switch(_list[p]) {
-                        case "int":
-                        case "float": value = 0; break;
-                        case "bool": value = false; break;
-                        case "string":  value = ""; break;
-                        case "group":  
-                        for(var gp in LStatePropertyGroups[p]){
-                            inner_add(gp, LStatePropertyGroups[p]);
-                        }
-                        return; // exit now
-                        default: value = 0;
-                    }
-
-                    if(p == "cancel") value = "DEFAULT";
-                    t.properties[p] = value;
-
-                    if(is_transition)
-                        that.showTransitions(filter);
-                    else
-                        that.onInspectNode(t);
+                var option = {
+                    title: i
                 }
 
-                options.push({
-                    title: i,
-                    callback: function(){
+                if(list[i] == "group")
+                {
+                    option.has_submenu = true;
+                    option.submenu = {
+                        options: [{
+                            title: "All",
+                            callback: function(){
+                                inner_add(i, list);
+                            }
+                        }, null]
+                    };
+
+                    for(let gp in LStatePropertyGroups[i]){
+                      option.submenu.options.push({
+                        title: gp,
+                        callback: function() {
+                            inner_add(gp, LStatePropertyGroups[i]);
+                        }
+                      });
+                    }
+                }else{
+                    option.callback = function(){
                         inner_add(i, list);
                     }
-                });
+                }
+
+                options.push(option);
             }
 
-            new LiteGraph.ContextMenu( options, { event: e});
+            new LiteGraph.ContextMenu(options, {event: e});
         }});
         
         propsTitle.children[0].appendChild( addButton.content );
