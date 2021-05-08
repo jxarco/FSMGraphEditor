@@ -8,6 +8,7 @@ LVariableTypes = [
     "float",
     "bool",
     "string",
+    "vec2",
     "vec3"
 ];
 
@@ -28,6 +29,7 @@ class FSMVariable {
                 case "float": this.value = 0; break;
                 case "bool": this.value = false; break;
                 case "string": this.value = ""; break;
+                case "vec2": this.value = new Float32Array(2); break;
                 case "vec3": this.value = new Float32Array(3); break;
                 default: this.value = 0;
             }
@@ -41,19 +43,25 @@ class FSMVariable {
             case "float": if(this.value.constructor !== Number) this.value = null; break;
             case "bool": if(this.value.constructor !== Boolean) this.value = null; break;
             case "string": if(this.value.constructor !== String) this.value = null; break;
+            case "vec2": 
+                if(this.value.constructor !== String) {
+                    this.value = null; break;
+                }
+                this.fillVECN(this.value, 2);
+                break;
             case "vec3": 
                 if(this.value.constructor !== String) {
                     this.value = null; break;
                 }
-                this.fillVEC3(this.value);
+                this.fillVECN(this.value, 3);
                 break;
         }
     }
 
-    fillVEC3(str) {
-        this.value = new Float32Array(3);
+    fillVECN(str, n) {
+        this.value = new Float32Array(n);
         var tkns = str.split(" ");
-        for(var i = 0; i < 3; ++i)
+        for(var i = 0; i < n; ++i)
         this.value[i] = parseFloat(tkns[i]);
     }
 
@@ -75,6 +83,7 @@ class FSMVariable {
                 }
 
                 break;
+            case "vec2":
             case "vec3":
                 // stringify vector: [1, 2, 3] -> "1 2 3"
                 var string = "";

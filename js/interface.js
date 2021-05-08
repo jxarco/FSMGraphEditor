@@ -490,7 +490,8 @@ var Interface = {
         for(var i in FSMVariable.All) {
 
             let variable = FSMVariable.All[i];
-            let is_large = variable.type == "string" || variable.type == "vec3";
+            let is_large = variable.type == "string" || variable.type == "vec2"
+                            || variable.type == "vec3";
 
             if(!variable.name.includes(filter)) continue;
 
@@ -518,6 +519,7 @@ var Interface = {
                                 {title: "float"},
                                 {title: "bool"},
                                 {title: "string"},
+                                {title: "vec2"},
                                 {title: "vec3"}
                             ]
                         }
@@ -538,6 +540,7 @@ var Interface = {
                     case "float": variable.value = 0; break;
                     case "bool": variable.value = false; break;
                     case "string": variable.value = ""; break;
+                    case "vec2": variable.value = new Float32Array(2); break;
                     case "vec3": variable.value = new Float32Array(3); break;
                     default: variable.value = 0;
                 }
@@ -551,9 +554,18 @@ var Interface = {
             {
                 case Float32Array:
                     var precision = 2;
-                    func = widgets.addVector3(null, value, {precision: precision, width: "60%", callback: function(v){
-                        variable.value = v;
-                    }});
+
+                    if(value.length == 2)
+                    {
+                        func = widgets.addVector2(null, value, {precision: precision, width: "60%", callback: function(v){
+                            variable.value = v;
+                        }});
+                    }else if(value.length == 3)
+                    {
+                        func = widgets.addVector3(null, value, {precision: precision, width: "60%", callback: function(v){
+                            variable.value = v;
+                        }});
+                    }
                     break;
                 case Number:
                     var precision = variable.type == "float" ? 2 : 0;
