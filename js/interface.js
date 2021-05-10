@@ -602,8 +602,9 @@ var Interface = {
         var meshes = "";
 
         var material_name = "";
-        var supported_textures = ["albedo", "normal", "roughness", "metallic"];
+        var supported_textures = ["albedo", "normal", "roughness", "metallic", "emissive"];
         var textures = {"albedo": true};
+        var uses_skin = true;
 
         widgets.on_refresh = function(){
             widgets.clear();
@@ -652,6 +653,9 @@ var Interface = {
                     }], { event: e});
             }});
             widgets.widgets_per_row = 1;
+            widgets.addCheckbox("Uses skin", uses_skin, {callback: function(v){
+                uses_skin = v;
+            }});
             widgets.addSeparator();
             widgets.addInfo(null, "'folder/name' don't write extension")
             widgets.addInfo(null, "ex: 'eon/eonhood' exports: 'data/textures/eon/eonhood.dds'")
@@ -666,10 +670,7 @@ var Interface = {
             widgets.widgets_per_row = 2;
             widgets.addButton(null, "Export material", {callback: function(){
     
-                var foo = {
-                    "pipeline": "objs.pipeline",
-                    "uses_skin": true
-                };
+                var foo = {};
                 
                 for(let t in textures){
                     if(textures[t] == true) // unnamed
@@ -680,6 +681,9 @@ var Interface = {
                     foo[t] = "data/textures/" + textures[t] + ".dds";
                 }
     
+                if(uses_skin)
+                    foo["uses_skin"] = true;
+
                 if(!material_name.length) material_name = "unnamed";
                 LiteGUI.downloadFile(material_name + ".mat", JSON.stringify(foo, null, 4));
             }});
