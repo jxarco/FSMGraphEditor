@@ -53,6 +53,30 @@ var app = {
 
         var graphModule = app["graph"];
         window.onresize = graphModule.resize.bind(graphModule);
+
+        document.addEventListener("keydown", function(e){
+
+            // keycode is depracated but support it anyway
+            if(e.key == "s" || e.keyCode == 83)
+            {
+                if(!e.ctrlKey)
+                return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                var drive = app["drive"];
+
+                if(!drive)
+                return;
+
+                var exportFsm = !e.shiftKey;
+
+                var selectedFilename = drive.lastFileLoaded ? drive.lastFileLoaded.split(".").shift() : "unnamed";
+                var extension = exportFsm ? ".fsm" : ".fsmgraph";
+                drive.exportFile(selectedFilename + extension, exportFsm);
+            }
+        });
     }
 }
 

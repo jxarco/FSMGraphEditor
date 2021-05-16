@@ -14,13 +14,11 @@ var LStateTypes = [
 ];
 
 var LStateProperties = {
-    // "duration": "float",
-    // "amount": "float",
-    // "offset": "string",
     "anim": "string",
     "loop": "bool",
     "root_motion": "bool",
     "keep_action": "bool",
+    "custom_start": "bool",
     "back_cycle": "string",
     "blend_time": "float",
     "blend_out": "float",
