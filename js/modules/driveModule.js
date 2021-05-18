@@ -380,15 +380,15 @@ class DriveModule {
         }
         
         // fill registered state and transition types
-        LStateTypes             = fsm_data.registered_state_types;
-        LStateProperties        = fsm_data.registered_state_properties;
-        LStatePropertyGroups    = fsm_data.registered_state_property_groups;
-        LStateTypeData          = fsm_data.registered_state_type_data;
+        updateContainer(LStateTypes, fsm_data.registered_state_types);
+        updateContainer(LStateProperties, fsm_data.registered_state_properties);
+        updateContainer(LStatePropertyGroups, fsm_data.registered_state_property_groups);
+        updateContainer(LStateTypeData, fsm_data.registered_state_type_data);
 
         // transition types and properties
-        LTransitionTypes        = fsm_data.registered_transition_types;
-        LTransitionProperties   = fsm_data.registered_transition_properties;
-        LTransitionTypeData     = fsm_data.registered_transition_type_data;
+        updateContainer(LTransitionTypes, fsm_data.registered_transition_types);
+        updateContainer(LTransitionProperties, fsm_data.registered_transition_properties);
+        updateContainer(LTransitionTypeData, fsm_data.registered_transition_type_data);
 
         // other settings
 

@@ -85,3 +85,30 @@ function getDecimalFraction(x) {
 function isBlendSample(str) {
     return str.includes("sample");
 }
+
+function updateContainer(old, current)
+{
+    if(old.constructor != current.constructor)
+        throw("BAD CONTAINER UPDATE");
+
+    if(old.constructor == Array)
+    {
+        var new_container = [].concat(old);
+
+        for(var i = 0; i < current.length; ++i)
+        {
+            var index = old.indexOf(current[i]);
+            if(index < 0)
+            {
+                new_container.push(current[i]);
+            }else
+            {
+                new_container[index] = current[i];
+            }
+        }
+    }
+    else
+    {
+        Object.assign(old, current);
+    }
+}

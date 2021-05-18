@@ -7,8 +7,6 @@
 var LStateTypes = [
     "",
     "any",
-    // "move",
-    // "shake",
     "animation",
     "blend_animation"
 ];
