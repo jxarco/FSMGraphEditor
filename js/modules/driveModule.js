@@ -239,10 +239,6 @@ class DriveModule {
 
     fillProperties(target, source) {
 
-        function isBlendSample(str) {
-            return str.includes("sample");
-        }
-
         var blendSamples = null;
 
         for( var p in source ) {

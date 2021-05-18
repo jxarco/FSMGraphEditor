@@ -81,3 +81,7 @@ function getDecimalFraction(x) {
     var int_part = Math.trunc(x);
     return [int_part, Number((x-int_part).toFixed(4))];
 }
+
+function isBlendSample(str) {
+    return str.includes("sample");
+}

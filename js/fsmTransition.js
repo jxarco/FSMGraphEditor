@@ -7,18 +7,22 @@ var LTransitionTypes = [
     "",
     "wait_time",
     "wait_state_finished",
-    "check_variable"
+    "check_variable",
+    "check_blend_factor"
 ];
 
 var LTransitionProperties = {
     "time": "float",
     "condition": "string",
-    "blend_time": "float"
+    "blend_time": "float",
+    "blend_factor": "string"
 };
 
 var LTransitionTypeData = {
-    "wait_time": ["time"],
-    "check_variable": ["condition"]
+    "wait_state_finished": ["blend_time"],
+    "wait_time": ["blend_time", "time"],
+    "check_variable": ["blend_time", "condition"],
+    "check_blend_factor": ["blend_time", "blend_factor"]
 }
 
 class FSMTransition {

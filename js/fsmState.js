@@ -147,6 +147,19 @@ FSMState.prototype.setGroupRelatedProperties = function(group)
     }
 }
 
+FSMState.prototype.addNewBlendSample = function()
+{
+    var nsample = 0;
+
+    Object.keys(this.properties).forEach(function(v){
+        if(isBlendSample(v))
+        nsample++;
+    });
+
+    this.properties["bldspace_sample" + nsample] = "";
+    this.properties = sortObject(this.properties, "type");
+}
+
 FSMState.title = "State";
 FSMState.All = {};
 FSMState.InitialState = null;

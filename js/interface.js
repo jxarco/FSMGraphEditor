@@ -283,7 +283,15 @@ var Interface = {
 
                 if(!var_type) {
                     var gparent = FSMState.GetGroupParent(p);
-                    var_type = LStatePropertyGroups[gparent][p];
+
+                    if(isBlendSample(p))
+                    {
+                        var_type = "string";
+                    }else
+                    {
+                        var_type = LStatePropertyGroups[gparent][p];
+                    }
+
                     string_name_width = "50%";
                     prop_name = p;
                 }
@@ -392,13 +400,26 @@ var Interface = {
                 {
                     option.has_submenu = true;
                     option.submenu = {
-                        options: [{
-                            title: "All",
-                            callback: function(){
-                                inner_add(i, list);
-                            }
-                        }, null]
+                        options: []
                     };
+
+                    if(i == "blendspace")
+                    {
+                        option.submenu.options.push({
+                            title: "Add new sample",
+                            callback: function(){
+                                t.addNewBlendSample();
+                                that.onInspectNode(t);
+                            }
+                        }, null);
+                    }
+
+                    option.submenu.options.push({
+                        title: "All",
+                        callback: function(){
+                            inner_add(i, list);
+                        }
+                    }, null);
 
                     for(let gp in LStatePropertyGroups[i]){
                       option.submenu.options.push({
