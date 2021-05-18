@@ -233,65 +233,46 @@ var Interface = {
 
             switch(value.constructor)
             {
-                case Number:
-                    func = widgets.addNumber.bind(widgets);
-                    break;
-                case String:
-                    if(p == "cancel") {
-                        var cancel_list = ["DEFAULT", "ON HIT", "ON DECISION", "ON ANY"];
-                        widgets.addCombo("cancel mode", value, {values: cancel_list, name_width: "40%", callback: function(v){
-                            t.properties[p] = v;
-                        }});
-                    }
-                    else if(p == "type") {
-                        widgets.addCombo(p, value, {values: type_list, name_width: "40%", callback: function(v){
-                            var lastBlendTime = t.properties["blend_time"];
-                            t.properties = {
-                                type: v
-                            };
+            case Number:
+                func = widgets.addNumber.bind(widgets);
+                break;
+            case String:
+                if(p == "cancel") {
+                    var cancel_list = ["DEFAULT", "ON HIT", "ON DECISION", "ON ANY"];
+                    func = cancel_list;
+                }
+                else if(p == "type") {
+                    widgets.addCombo(p, value, {values: type_list, name_width: "40%", callback: function(v){
+                        var lastBlendTime = t.properties["blend_time"];
+                        t.properties = {
+                            type: v
+                        };
 
-                            // transitions always have blend_time
-                            if(lastBlendTime) t.properties["blend_time"] = lastBlendTime;
+                        // transitions always have blend_time
+                        if(lastBlendTime) t.properties["blend_time"] = lastBlendTime;
 
-                            // check if there's any type related property to add
-                            var typeData = is_transition ? LTransitionTypeData : LStateTypeData;
-                            var relatedProps = typeData[v];
-                            if(!relatedProps) relatedProps = [];
-                            
-                            for(var i in relatedProps) {
-                                var prop = relatedProps[i];
+                        // check if there's any type related property to add
+                        var typeData = is_transition ? LTransitionTypeData : LStateTypeData;
+                        var relatedProps = typeData[v];
+                        if(!relatedProps) relatedProps = [];
 
-                                // don't add if already has it
-                                if(t.properties[prop]) continue;
+                        // every state or transition have this
+                        t.setRelatedProperties(relatedProps, list);
 
-                                var propType = list[prop];
+                        if(is_transition)
+                            that.showTransitions(filter);
+                        else
+                            that.onInspectNode(t);
 
-                                var value;
-                                switch(propType) {
-                                    case "int":
-                                    case "float": value = 0; break;
-                                    case "bool": value = false; break;
-                                    case "string":  value = ""; break;
-                                    default: value = 0;
-                                }
-
-                                t.properties[prop] = value;
-                            }
-
-                            if(is_transition)
-                                that.showTransitions(filter);
-                            else
-                                that.onInspectNode(t);
-
-                        }});
-                        widgets.addSeparator();
-                    }else {
-                        func = widgets.addString.bind(widgets);
-                    }
-                    break;
-                case Boolean:
-                    func = widgets.addCheckbox.bind(widgets);
-                    break;
+                    }});
+                    widgets.addSeparator();
+                }else {
+                    func = widgets.addString.bind(widgets);
+                }
+                break;
+            case Boolean:
+                func = widgets.addCheckbox.bind(widgets);
+                break;
             }
 
             if(func) {
@@ -309,29 +290,42 @@ var Interface = {
 
                 var precision = var_type == "float" ? 3 : 0;
                 var is_string = var_type == "string";
-                var propWidget = func(prop_name, value, {precision: precision, name_width: is_string ? string_name_width : "70%", callback: function(v){
 
-                    // check it first side if a valid variable
-                    if(is_transition && p == "condition") {
-                        var tkns = v.split(" ");
-                        var variable = tkns[0];
-                        var that = this;
+                var propWidget = null;
 
-                        if(FSMVariable.Exists(variable)) t.properties[p] = v;
-                        else {
-                            LiteGUI.alert("Variable \"" + variable + "\" not found", {
-                                title: "Error", 
-                                noclose: true,
-                                on_close: function(){
-                                    that.lastElementChild.lastElementChild.lastElementChild.value = value;
-                                }
-                            });
-                        }
-                    }
-                    else {
+                // COMBOS
+                if(func.constructor == Array)
+                {
+                    propWidget = widgets.addCombo("cancel mode", value, {values: cancel_list, name_width: "40%", callback: function(v){
                         t.properties[p] = v;
-                    }
-                }});
+                    }});
+                }
+                else
+                {
+                    propWidget = func(prop_name, value, {precision: precision, name_width: is_string ? string_name_width : "70%", callback: function(v){
+
+                        // check it first side if a valid variable
+                        if(is_transition && p == "condition") {
+                            var tkns = v.split(" ");
+                            var variable = tkns[0];
+                            var that = this;
+    
+                            if(FSMVariable.Exists(variable)) t.properties[p] = v;
+                            else {
+                                LiteGUI.alert("Variable \"" + variable + "\" not found", {
+                                    title: "Error", 
+                                    noclose: true,
+                                    on_close: function(){
+                                        that.lastElementChild.lastElementChild.lastElementChild.value = value;
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            t.properties[p] = v;
+                        }
+                    }});
+                }
 
                 propWidget.querySelector(".wname").classList.add(var_type);
                 propWidget.addEventListener("contextmenu", function(e){

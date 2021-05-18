@@ -49,8 +49,8 @@ var LStatePropertyGroups = {
 var LStateTypeData = {
     // "move": ["duration", "offset"],
     // "shake": ["amount"],
-    "animation": ["anim", "loop", "root_motion", "keep_action", "back_cycle", "blend_out"]
-    // "blend_animation": ["blendspace", "blend_time", "root_motion"]
+    "animation": ["anim", "loop", "root_motion", "keep_action", "back_cycle", "blend_out"],
+    "blend_animation": ["blendspace", "blend_time", "root_motion"]
 }
 
 //node constructor class
@@ -96,6 +96,55 @@ FSMState.prototype.getNumOutputs = function()
     }
 
     return numOuts;
+}
+
+FSMState.prototype.setRelatedProperties = function(relatedProps, relations)
+{
+    for(var i in relatedProps) {
+        var prop = relatedProps[i];
+
+        // don't add if already has it
+        if(this.properties[prop]) continue;
+
+        var propType = relations[prop];
+
+        var value;
+        switch(propType) {
+            case "int":
+            case "float": value = 0; break;
+            case "bool": value = false; break;
+            case "string":  value = ""; break;
+            case "group":  
+                this.setGroupRelatedProperties(LStatePropertyGroups[prop]);
+                // don't store any value here
+                continue;
+            default: value = 0;
+        }
+
+        this.properties[prop] = value;
+    }
+}
+
+FSMState.prototype.setGroupRelatedProperties = function(group)
+{
+    for(var i in group) {
+
+        // don't add if already has it
+        if(this.properties[i]) continue;
+
+        var propType = group[i];
+
+        var value;
+        switch(propType) {
+            case "int":
+            case "float": value = 0; break;
+            case "bool": value = false; break;
+            case "string":  value = ""; break;
+            default: value = 0;
+        }
+
+        this.properties[i] = value;
+    }
 }
 
 FSMState.title = "State";

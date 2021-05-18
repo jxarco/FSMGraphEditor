@@ -71,6 +71,29 @@ class FSMTransition {
             properties: this.properties
         };
     }
+
+    setRelatedProperties(relatedProps, relations) {
+
+        for(var i in relatedProps) {
+            var prop = relatedProps[i];
+
+            // don't add if already has it
+            if(this.properties[prop]) continue;
+
+            var propType = relations[prop];
+
+            var value;
+            switch(propType) {
+                case "int":
+                case "float": value = 0; break;
+                case "bool": value = false; break;
+                case "string":  value = ""; break;
+                default: value = 0;
+            }
+
+            this.properties[prop] = value;
+        }
+    }
 }
 
 // i don't want to create a transition manager to store this
