@@ -18,6 +18,7 @@ var LStateProperties = {
     "keep_action": "bool",
     "custom_start": "bool",
     "back_cycle": "string",
+    "link_variable": "string",
     "blend_time": "float",
     "blend_out": "float",
     "blendspace": "group",
