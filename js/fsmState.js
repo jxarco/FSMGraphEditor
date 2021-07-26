@@ -15,6 +15,7 @@ var LStateProperties = {
     "anim": "string",
     "loop": "bool",
     "root_motion": "bool",
+    "root_yaw": "bool",
     "keep_action": "bool",
     "custom_start": "bool",
     "back_cycle": "string",
@@ -48,7 +49,7 @@ var LStatePropertyGroups = {
 var LStateTypeData = {
     // "move": ["duration", "offset"],
     // "shake": ["amount"],
-    "animation": ["anim", "loop", "root_motion", "keep_action", "back_cycle", "blend_out"],
+    "animation": ["anim", "loop", "root_motion", "root_yaw", "keep_action", "back_cycle", "blend_out"],
     "blend_animation": ["blendspace", "blend_time", "root_motion"]
 }
 
