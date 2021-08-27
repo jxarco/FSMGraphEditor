@@ -59,6 +59,8 @@ var Interface = {
         LiteGUI.menubar.add("Engine tools/Skeleton exporter", { callback: that.openSkeletonFileExporter.bind(that)});
         LiteGUI.menubar.add("About/Author: @jxarco", { disabled: true });
         LiteGUI.menubar.add("About/Using litegraph.js and litegui.js (@jagenjo)", { disabled: true });
+        LiteGUI.menubar.add("|", { disabled: true });
+        LiteGUI.menubar.add("", { disabled: true });
     },
 
     createSidePanel() {

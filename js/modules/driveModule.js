@@ -154,6 +154,7 @@ class DriveModule {
         reader.onload = function(event){
             var result = event.target.result;
             var fsmData = JSON.parse(result);
+            fsmData.filename = filename;
             LiteGUI.confirm("Current FSM will be lost", function(v){
                 if(v) that.importFile(fsmData);
             }, {title: "Load FSM" });
@@ -332,6 +333,12 @@ class DriveModule {
     }
 
     importFile(data) {
+
+        // Modify FSM Title in Menubar
+        {
+            LiteGUI.menubar.menu[4].name = data.filename || "";
+            LiteGUI.menubar.updateMenu();
+        }
 
         var graphModule = app["graph"];
         var graph = graphModule.graph;
