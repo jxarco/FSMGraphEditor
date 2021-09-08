@@ -261,6 +261,13 @@ class GraphModule {
         var node1 = this.addState("Idle", [300, 300]);
         var node2 = this.addState("Move", [800, 300]);
 
+        var group = new LiteGraph.LGraphGroup();
+        group.pos = [200, 200];
+        group.size = [865, 200];
+        group.title = "Example";
+        group.color = '#A0B3D1';
+        this.graph.add(group);
+
         node1.connect(0, node2, 0);
     }
 

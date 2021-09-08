@@ -10887,7 +10887,7 @@ LGraphNode.prototype.executeAction = function(action)
     };
 
     LGraphCanvas.node_colors = {
-        red: { color: "#322", bgcolor: "#533", groupcolor: "#A88" },
+        red: { color: "#322", bgcolor: "#533", groupcolor: "#B88" },
         brown: { color: "#332922", bgcolor: "#593930", groupcolor: "#b06634" },
         green: { color: "#232", bgcolor: "#353", groupcolor: "#8A8" },
         blue: { color: "#223", bgcolor: "#335", groupcolor: "#88A" },
