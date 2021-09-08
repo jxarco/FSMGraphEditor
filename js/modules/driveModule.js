@@ -263,10 +263,10 @@ class DriveModule {
 
                     blendSamples.push({ name: anim_name, blend_point: bpoint });
                 }
-            }else if(p == "cancel"){
+            }else if(p == "cancel") {
                 var tkns = prop.toLowerCase().split(" ");
                 target[p] = tkns.join("_");
-            }else if(p == "callbacks"){
+            }else if(p == "callbacks") {
                 var tkns = prop.replace(/\s/g, "").split(",");
                 target[p] = [];
                 for(var t in tkns){
@@ -274,14 +274,28 @@ class DriveModule {
                 }
             }
             // it's a group
-            else if(!LStateProperties[p] && p != "type"){
+            else if(!LStateProperties[p] && p != "type") {
                 var gparent = FSMState.GetGroupParent(p);
                 // first time filling this
                 if(target[gparent] == undefined) target[gparent] = {};
                 // fill same way
                 p = p.replace(gparent+"_", "");
-                target[gparent][p] = prop;
-            }else {
+
+                // async name can be an array
+                if(gparent == "async" && p == "name")
+                {
+                    if(!target[gparent][p])
+                        target[gparent][p] = [];
+
+                    var list = prop.replaceAll(/\s/g,'');
+                    var tkns = list.split(",");
+                    target[gparent][p] = target[gparent][p].concat( tkns );
+                }else
+                {
+                    target[gparent][p] = prop;
+                }
+            }
+            else {
                 target[p] = prop;
             }
         }
