@@ -29,7 +29,7 @@ class DriveModule {
         var area = Interface.drive_area;
 
         // split settings area
-        area.split("horizontal",["40%",null]);
+        area.split("horizontal",["33%",null]);
 
         var widgets = this.widgets = area.widgets = new LiteGUI.Inspector();
         widgets.root.style.padding = "12px";

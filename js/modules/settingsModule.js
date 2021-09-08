@@ -41,7 +41,7 @@ class SettingsModule {
         var area = Interface.settings_area;
 
         // split settings area
-        area.split("horizontal",["40%",null]);
+        area.split("horizontal",["33%",null]);
 
         var widgets = this.widgets = area.widgets = new LiteGUI.Inspector();
         widgets.root.style.padding = "12px";
@@ -102,7 +102,7 @@ class SettingsModule {
         widgets.addCheckbox("Connection tooltip", this.render_link_tooltip, {name_width: "80%", callback: function(v){ that.render_link_tooltip = v; that.apply(); }})
 
         var values = [ "STRAIGHT", "LINEAR", "SPLINE"];
-        widgets.addCombo("Connections as", values[this.links_render_mode], {values: values, name_width: "50%", callback: function(v){ 
+        widgets.addCombo("Connections as", values[this.links_render_mode], {values: values, name_width: "55%", callback: function(v){ 
             v = values.indexOf(v);
             that.links_render_mode = v > -1 ? v : LiteGraph.SPLINE_LINK; 
             if(v == 0) {
