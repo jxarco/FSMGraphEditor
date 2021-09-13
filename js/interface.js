@@ -186,15 +186,24 @@ var Interface = {
             if(app["graph"]) app["graph"].redraw();
         }});
 
-        widgets.addTitle("Properties");
+        widgets.addTitle("Data");
 
         var graph_nodes = [""].concat(
             app.modules.graph.graph._nodes.filter(e => !e.is_shortcut)
         );
 
-        widgets.addCombo("Target", node.shortcut_target || "", {values: graph_nodes, callback: function(v){
-                node.shortcut_target = v;
+        widgets.addCombo("Target", node.shortcut_target || "", {values: graph_nodes, disabled: node.shortcut_set, callback: function(v){
+            node.shortcut_target = v;
+            node.shortcut_set = true;
+            that.onInspectNode(node);
         }});
+
+        if(node.shortcut_set) {
+            widgets.addButton(null, "Reset shortcut", {callback: function(){
+                if(app["graph"])
+                    that.onInspectNode(app["graph"].cloneAndRemove(node));
+            }});    
+        }
     },
 
     showTransitions(filter, use_previous_filter) {

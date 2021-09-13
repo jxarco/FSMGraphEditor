@@ -73,6 +73,15 @@ class GraphModule {
                 FSMState.InitialState = node;
         }
 
+        this.canvas.onCreateShortcut = function(node) {
+
+            if(node){
+                var s_node = that.addState(null, [node.pos[0] + 20, node.pos[1] + 20], true);
+                s_node.shortcut_set = true;
+                s_node.shortcut_target = node;
+            }
+        }
+
         this.canvas.onGetTransitionInfo = function(link_name, link_id) {
 
             if(Interface) {
@@ -534,6 +543,20 @@ class GraphModule {
                 }
             }
         }
+    }
+
+    cloneAndRemove(node) {
+
+        var isShortcut = node.is_shortcut;
+        var pos = [node.pos[0] + 1, node.pos[1]];
+        FSMState.RemoveByName(node.title);
+        this.canvas.deleteSelectedNodes();
+
+        var that = this;
+
+        setTimeout(function(){
+            Interface.onInspectNode(that.addState(null, pos, isShortcut));
+        }, 1);
     }
 
     applySettings(settings) {

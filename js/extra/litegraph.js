@@ -10976,6 +10976,10 @@ LGraphNode.prototype.executeAction = function(action)
                     content: "Set as initial state",
                     callback: this.onSetInitialState.bind(this, node)
                 },
+                {
+                    content: "Create shortcut",
+                    callback: this.onCreateShortcut.bind(this, node)
+                },
                 null,
                 {
                     content: "Properties",
