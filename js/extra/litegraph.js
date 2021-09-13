@@ -7556,7 +7556,7 @@ LGraphNode.prototype.executeAction = function(action)
         //render inputs and outputs
         if (!node.flags.collapsed) {
             //input connection slots
-            if (node.inputs && !node.is_shortcut) {
+            if (node.inputs/* && !node.is_shortcut*/) {
                 for (var i = 0; i < 1; i++) {
                     var slot = node.inputs[i];
 

@@ -108,15 +108,31 @@ class GraphModule {
 
         this.canvas.onAutoConnectNode = function(slot, nodeSrc, nodeDst, connected_slot) {
 
-            // cant connect to Entry
-            if(nodeDst.is_shortcut) {
-                console.warn("can't connect to shortcut!");
-                return;
+            var finalNodeSrc = nodeSrc.getFinalState();
+            var finalNodeDst = nodeDst.getFinalState();
+
+            // don't duplicate transitions
+            if(nodeSrc.is_shortcut || nodeDst.is_shortcut) {
+                
+                if((nodeSrc.is_shortcut && !nodeSrc.shortcut_target) 
+                    || (nodeDst.is_shortcut && !nodeDst.shortcut_target)){
+                    showError("Select shortcut target first");
+                    return;
+                }
+
+                if(FSMTransition.Exists(finalNodeSrc.title, finalNodeDst.title)) {
+                    showError("Transition already exists");
+                    return;
+                }
+                if(finalNodeSrc.id == finalNodeDst.id) {
+                    showError("Invalid shortcut reference");
+                    return;
+                }
             }
 
             // cant connect to Entry
             if(nodeDst.type == "states/entry") {
-                console.warn("can't connect to Entry input!");
+                console.warn("Can't connect to Entry input!");
                 return;
             }
 

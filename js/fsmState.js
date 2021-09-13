@@ -169,6 +169,15 @@ FSMState.prototype.getTitle = function()
     }
 }
 
+FSMState.prototype.getFinalState = function()
+{
+    if(this.is_shortcut && this.shortcut_target) {
+        return this.shortcut_target;
+    }else {
+        return this;
+    }
+}
+
 FSMState.title = "State";
 FSMState.All = {};
 FSMState.InitialState = null;

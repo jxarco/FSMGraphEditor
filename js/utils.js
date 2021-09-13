@@ -128,3 +128,8 @@ function setNodeColor(node, c) {
     node.bgcolor = stateColor.bgcolor;
     node.fontcolor = stateColor.fontcolor;
 }
+
+function showError(text, title) {
+    if(!text) return;
+    LiteGUI.alert(text, {"title": title ? title : "Error"});
+}

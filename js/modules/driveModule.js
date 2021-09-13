@@ -221,18 +221,14 @@ class DriveModule {
             var transition = FSMTransition.All[i];
             var jTransition = {};
             
-            jTransition["source"] = transition.origin;
+            var nodeSrc = FSMState.GetByName(transition.origin);
+            if(nodeSrc) nodeSrc = nodeSrc.getFinalState();
 
-            var originNode = FSMState.GetByName(transition.origin);
-            if(originNode && originNode.is_shortcut){
+            var nodeDst = FSMState.GetByName(transition.target);
+            if(nodeDst) nodeDst = nodeDst.getFinalState();
 
-                if(originNode.shortcut_target && this.checkShortcutTarget(originNode.shortcut_target.title, transition.target))
-                    jTransition["source"] = originNode.shortcut_target.title;
-                else
-                    continue;
-            }
-
-            jTransition["target"] = transition.target;
+            jTransition["source"] = nodeSrc.title;
+            jTransition["target"] = nodeDst.title;
 
             for(var p in transition.properties) {
                 jTransition[p] = transition.properties[p];
