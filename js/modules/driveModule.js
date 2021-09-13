@@ -227,8 +227,8 @@ class DriveModule {
             var nodeDst = FSMState.GetByName(transition.target);
             if(nodeDst) nodeDst = nodeDst.getFinalState();
 
-            jTransition["source"] = nodeSrc.title;
-            jTransition["target"] = nodeDst.title;
+            jTransition["source"] = nodeSrc ? nodeSrc.title : transition.origin;
+            jTransition["target"] = nodeDst ? nodeDst.title : transition.target;
 
             for(var p in transition.properties) {
                 jTransition[p] = transition.properties[p];
