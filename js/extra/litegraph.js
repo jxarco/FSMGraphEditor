@@ -27,6 +27,7 @@
         NODE_COLLAPSED_WIDTH: 80,
         NODE_TITLE_COLOR: "#999",
         NODE_SELECTED_TITLE_COLOR: "#FFF",
+        NODE_SELECTED_TITLE_COLOR_DARK: "#000",
         NODE_TEXT_SIZE: 14,
         NODE_TEXT_COLOR: "#AAA",
         NODE_SUBTEXT_SIZE: 12,
@@ -7432,6 +7433,7 @@ LGraphNode.prototype.executeAction = function(action)
 
         var color = node.color || node.constructor.color || LiteGraph.NODE_DEFAULT_COLOR;
         var bgcolor = node.bgcolor || node.constructor.bgcolor || LiteGraph.NODE_DEFAULT_BGCOLOR;
+        var fontcolor = node.fontcolor || node.constructor.fontcolor || LiteGraph.NODE_TEXT_COLOR;
 
         // hardcoded 
         if(FSMState.InitialState && node.id === FSMState.InitialState.id) {
@@ -7488,11 +7490,6 @@ LGraphNode.prototype.executeAction = function(action)
         if (node.flags.collapsed) {
             ctx.font = this.inner_text_font;
             var title = node.getTitle ? node.getTitle() : node.title;
-
-            if(node.is_shortcut && node.shortcut_target){
-                title = node.shortcut_target.title + " (Shortcut)";
-            }
-
             if (title != null) {
                 node._collapsed_width = Math.min(
                     node.size[0],
@@ -7623,7 +7620,7 @@ LGraphNode.prototype.executeAction = function(action)
                     if (render_text) {
                         var text = "In (" + numIns + ")";//slot.label != null ? slot.label : slot.name;
                         if (text) {
-                            ctx.fillStyle = LiteGraph.NODE_TEXT_COLOR;
+                            ctx.fillStyle = fontcolor;
                             if (horizontal || slot.dir == LiteGraph.UP) {
                                 ctx.fillText(text, pos[0], pos[1] - 10);
                             } else {
@@ -7707,7 +7704,7 @@ LGraphNode.prototype.executeAction = function(action)
                     if (render_text) {
                         var text = "Out (" + numOuts + ")"; //slot.label != null ? slot.label : slot.name;
                         if (text) {
-                            ctx.fillStyle = LiteGraph.NODE_TEXT_COLOR;
+                            ctx.fillStyle = fontcolor;
                             if (horizontal || slot.dir == LiteGraph.DOWN) {
                                 ctx.fillText(text, pos[0], pos[1] - 8);
                             } else {
@@ -8090,11 +8087,6 @@ LGraphNode.prototype.executeAction = function(action)
             if (!low_quality) {
                 ctx.font = this.title_text_font;
                 var title = String(node.getTitle());
-
-                if(node.is_shortcut && node.shortcut_target){
-                    title = node.shortcut_target.title + " (Shortcut)";
-                }
-                
                 if (title) {
                     if (selected) {
                         ctx.fillStyle = LiteGraph.NODE_SELECTED_TITLE_COLOR;
@@ -8102,6 +8094,13 @@ LGraphNode.prototype.executeAction = function(action)
                         ctx.fillStyle =
                             node.constructor.title_text_color ||
                             this.node_title_color;
+                    }
+                    if(node.fontcolor) {
+                        ctx.fillStyle = node.fontcolor;
+
+                        if (selected) {
+                            ctx.fillStyle = LiteGraph.NODE_SELECTED_TITLE_COLOR_DARK;
+                        }
                     }
                     if (node.flags.collapsed) {
                         ctx.textAlign = "left";
@@ -10777,7 +10776,7 @@ LGraphNode.prototype.executeAction = function(action)
             var value = {
                 value: i,
                 content:
-                    "<span style='display: block; color: #999; padding-left: 4px; border-left: 8px solid " +
+                    "<span style='display: block; color: " + (color.fontcolor ? color.fontcolor : "#999") + "; padding-left: 4px; border-left: 8px solid " +
                     color.color +
                     "; background-color:" +
                     color.bgcolor +
@@ -10806,10 +10805,12 @@ LGraphNode.prototype.executeAction = function(action)
                 } else {
                     node.color = color.color;
                     node.bgcolor = color.bgcolor;
+                    node.fontcolor = color.fontcolor;
                 }
             } else {
                 delete node.color;
                 delete node.bgcolor;
+                delete node.fontcolor;
             }
             node.setDirtyCanvas(true, true);
         }
@@ -10898,8 +10899,8 @@ LGraphNode.prototype.executeAction = function(action)
 
     LGraphCanvas.node_colors = {
         red: { color: "#322", bgcolor: "#533", groupcolor: "#B88" },
-        brown: { color: "#332922", bgcolor: "#593930", groupcolor: "#b06634" },
-        green: { color: "#232", bgcolor: "#353", groupcolor: "#8A8" },
+        brown: { color: "#332922", bgcolor: "#493930", groupcolor: "#b06634" },
+        green: { color: "#283828", bgcolor: "#355535", groupcolor: "#8A8" },
         blue: { color: "#223", bgcolor: "#335", groupcolor: "#88A" },
         pale_blue: {
             color: "#2a363b",
@@ -10909,7 +10910,8 @@ LGraphNode.prototype.executeAction = function(action)
         cyan: { color: "#233", bgcolor: "#355", groupcolor: "#8AA" },
         purple: { color: "#323", bgcolor: "#535", groupcolor: "#a1309b" },
         yellow: { color: "#432", bgcolor: "#653", groupcolor: "#b58b2a" },
-        black: { color: "#151515", bgcolor: "#000", groupcolor: "#444" }
+        black: { color: "#222", bgcolor: "#111", groupcolor: "#333"},
+        white: { color: "#6668", bgcolor: "#eee", groupcolor: "#fff", fontcolor: "#333" }
     };
 
     LGraphCanvas.prototype.getCanvasMenuOptions = function(event) {
@@ -11037,8 +11039,10 @@ LGraphNode.prototype.executeAction = function(action)
             callback: LGraphCanvas.onShowPropertyEditor
         },);
 
-        if(node.is_shortcut)
-        options = [];
+        // Only leave color option
+        if(node.is_shortcut){
+            options = [options[3], null];
+        }
 
 		options.push({
 			content: "Remove",

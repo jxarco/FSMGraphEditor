@@ -112,3 +112,19 @@ function updateContainer(old, current)
         Object.assign(old, current);
     }
 }
+
+function setNodeColor(node, c) {
+
+    if(!node)
+    return;
+
+    var stateColor = LGraphCanvas.node_colors[c];
+    if(!stateColor){
+        console.warn("can't apply color: ", c)
+        return;
+    }
+
+    node.color = stateColor.color;
+    node.bgcolor = stateColor.bgcolor;
+    node.fontcolor = stateColor.fontcolor;
+}

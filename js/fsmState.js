@@ -160,6 +160,15 @@ FSMState.prototype.addNewBlendSample = function()
     this.properties = sortObject(this.properties, "type");
 }
 
+FSMState.prototype.getTitle = function()
+{
+    if(this.is_shortcut && this.shortcut_target) {
+        return this.shortcut_target.title + " (Shortcut)";
+    }else {
+        return this.title;
+    }
+}
+
 FSMState.title = "State";
 FSMState.All = {};
 FSMState.InitialState = null;

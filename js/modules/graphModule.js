@@ -298,9 +298,7 @@ class GraphModule {
         node.is_shortcut = is_shortcut;
 
         if(node.is_shortcut){
-            var stateColor = LGraphCanvas.node_colors["black"];
-            node.color = stateColor.color;
-            node.bgcolor = stateColor.bgcolor;
+            setNodeColor(node, "white");
             node.shape = "box";
         }
 
