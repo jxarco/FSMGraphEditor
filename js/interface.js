@@ -90,6 +90,12 @@ var Interface = {
         } 
         
         widgets.clear();
+
+        if(node.is_shortcut){
+            this.onInspectShortcut(node);
+            return;
+        }
+
         widgets.addSection("State");
         widgets.widgets_per_row = 1;
         widgets.addString("Name", node.title, {name_width: "50%", callback: function(v){ 
@@ -163,6 +169,32 @@ var Interface = {
         }
 
         widgets.endCurrentSection();
+    },
+
+    onInspectShortcut(node){
+
+        var widgets = this.inspector;
+        var that = this;
+
+        widgets.addSection("Shortcut");
+        widgets.widgets_per_row = 1;
+        widgets.addString("Name", node.title, {name_width: "50%", disabled: true});
+        widgets.widgets_per_row = 1;
+        widgets.addSeparator();
+        widgets.addVector2("Position", node.pos, {callback: function(v){ 
+            node.pos = v; 
+            if(app["graph"]) app["graph"].redraw();
+        }});
+
+        widgets.addTitle("Properties");
+
+        var graph_nodes = [""].concat(
+            app.modules.graph.graph._nodes.filter(e => !e.is_shortcut)
+        );
+
+        widgets.addCombo("Target", node.shortcut_target || "", {values: graph_nodes, callback: function(v){
+                node.shortcut_target = v;
+        }});
     },
 
     showTransitions(filter, use_previous_filter) {

@@ -7488,6 +7488,11 @@ LGraphNode.prototype.executeAction = function(action)
         if (node.flags.collapsed) {
             ctx.font = this.inner_text_font;
             var title = node.getTitle ? node.getTitle() : node.title;
+
+            if(node.is_shortcut && node.shortcut_target){
+                title = node.shortcut_target.title + " (Shortcut)";
+            }
+
             if (title != null) {
                 node._collapsed_width = Math.min(
                     node.size[0],
@@ -7554,7 +7559,7 @@ LGraphNode.prototype.executeAction = function(action)
         //render inputs and outputs
         if (!node.flags.collapsed) {
             //input connection slots
-            if (node.inputs) {
+            if (node.inputs && !node.is_shortcut) {
                 for (var i = 0; i < 1; i++) {
                     var slot = node.inputs[i];
 
@@ -8085,6 +8090,11 @@ LGraphNode.prototype.executeAction = function(action)
             if (!low_quality) {
                 ctx.font = this.title_text_font;
                 var title = String(node.getTitle());
+
+                if(node.is_shortcut && node.shortcut_target){
+                    title = node.shortcut_target.title + " (Shortcut)";
+                }
+                
                 if (title) {
                     if (selected) {
                         ctx.fillStyle = LiteGraph.NODE_SELECTED_TITLE_COLOR;
@@ -10899,7 +10909,7 @@ LGraphNode.prototype.executeAction = function(action)
         cyan: { color: "#233", bgcolor: "#355", groupcolor: "#8AA" },
         purple: { color: "#323", bgcolor: "#535", groupcolor: "#a1309b" },
         yellow: { color: "#432", bgcolor: "#653", groupcolor: "#b58b2a" },
-        black: { color: "#222", bgcolor: "#000", groupcolor: "#444" }
+        black: { color: "#151515", bgcolor: "#000", groupcolor: "#444" }
     };
 
     LGraphCanvas.prototype.getCanvasMenuOptions = function(event) {
@@ -10913,10 +10923,10 @@ LGraphNode.prototype.executeAction = function(action)
                     content: "Add State",
                     callback: this.onNewNode.bind(this, event)
                 },
-                // {
-                //     content: "Add Variable",
-                //     callback: this.onNewVariable.bind(this, event)
-                // },
+                {
+                    content: "Add Shortcut",
+                    callback: this.onNewShortcut.bind(this, event)
+                },
                 null,
                 { content: "Add Group", callback: LGraphCanvas.onGroupAdd }
             ];
@@ -11022,23 +11032,15 @@ LGraphNode.prototype.executeAction = function(action)
             }
         }
 
-        // if (node.clonable !== false) {
-        //     options.push({
-        //         content: "Clone",
-        //         callback: LGraphCanvas.onMenuNodeClone
-        //     });
-        // }
-
-		if(0) //TODO
-		options.push({
-			content: "To Subgraph",
-			callback: LGraphCanvas.onMenuNodeToSubgraph
-		});
-
-		options.push({
+        options.push({
             content: "Rename",
             callback: LGraphCanvas.onShowPropertyEditor
-        },{
+        },);
+
+        if(node.is_shortcut)
+        options = [];
+
+		options.push({
 			content: "Remove",
 			disabled: !(node.removable !== false && !node.block_delete ),
 			callback: LGraphCanvas.onMenuNodeRemove

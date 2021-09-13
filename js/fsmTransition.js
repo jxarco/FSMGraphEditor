@@ -102,6 +102,7 @@ class FSMTransition {
 
 // i don't want to create a transition manager to store this
 FSMTransition.All = [];
+FSMTransition.Exists = function(o, t) { return FSMTransition.All.find(e => (e.origin === o && e.target === t) ); }
 FSMTransition.GetById = function(id) { return FSMTransition.All.find(e => e.id === id ); }
 FSMTransition.GetByName = function(name) { return FSMTransition.All.find(e => e.name === name ); }
 FSMTransition.RemoveById = function(id) { 

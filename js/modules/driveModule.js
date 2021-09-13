@@ -205,6 +205,10 @@ class DriveModule {
         for(var i in FSMState.All) {
 
             var state = FSMState.All[i];
+
+            if(state.is_shortcut)
+            continue;
+
             var jState = { name: state.title };
             
             error |= this.fillProperties(jState, state.properties);
@@ -217,8 +221,17 @@ class DriveModule {
             var transition = FSMTransition.All[i];
             var jTransition = {};
             
-            // jTransition["name"] = transition.name;
             jTransition["source"] = transition.origin;
+
+            var originNode = FSMState.GetByName(transition.origin);
+            if(originNode && originNode.is_shortcut){
+
+                if(originNode.shortcut_target && this.checkShortcutTarget(originNode.shortcut_target.title, transition.target))
+                    jTransition["source"] = originNode.shortcut_target.title;
+                else
+                    continue;
+            }
+
             jTransition["target"] = transition.target;
 
             for(var p in transition.properties) {
@@ -236,6 +249,10 @@ class DriveModule {
         }
 
         return error ? null : jFsm;
+    }
+
+    checkShortcutTarget(origin_title, target_title){
+        return !FSMTransition.Exists(origin_title, target_title) && origin_title != target_title;
     }
 
     fillProperties(target, source) {

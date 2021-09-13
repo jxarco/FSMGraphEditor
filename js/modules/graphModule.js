@@ -31,10 +31,10 @@ class GraphModule {
             Interface.showVariables();
         }
 
-        // this.canvas.onNewVariable = function(e) {
-        //     FSMVariable.All.push(new FSMVariable());
-        //     Interface.showVariables();
-        // }
+        this.canvas.onNewShortcut = function(e) {
+
+           that.addState(null, e, true);
+        }
 
         this.canvas.onNewNode = function(e) {
 
@@ -107,6 +107,12 @@ class GraphModule {
         }
 
         this.canvas.onAutoConnectNode = function(slot, nodeSrc, nodeDst, connected_slot) {
+
+            // cant connect to Entry
+            if(nodeDst.is_shortcut) {
+                console.warn("can't connect to shortcut!");
+                return;
+            }
 
             // cant connect to Entry
             if(nodeDst.type == "states/entry") {
@@ -271,10 +277,15 @@ class GraphModule {
         node1.connect(0, node2, 0);
     }
 
-    addState(name, e) {
+    addState(name, e, is_shortcut) {
 
         var type = "states/default";
         var title = name;
+
+        if(is_shortcut){
+            type = "states/shortcut";
+            title = "Shortcut";
+        }
 
         // is type
         if(name && name.includes("/")) {
@@ -284,6 +295,14 @@ class GraphModule {
 
         var node = LiteGraph.createNode(type);
         node.title = title || node.title;
+        node.is_shortcut = is_shortcut;
+
+        if(node.is_shortcut){
+            var stateColor = LGraphCanvas.node_colors["black"];
+            node.color = stateColor.color;
+            node.bgcolor = stateColor.bgcolor;
+            node.shape = "box";
+        }
 
         if(e.constructor == Array)
             node.pos = e;

@@ -177,6 +177,7 @@ FSMState.GetGroupParent = function(p){
 
 //register in the system
 LiteGraph.registerNodeType("states/default", FSMState );
+LiteGraph.registerNodeType("states/shortcut", FSMState );
 
 function FSMEntryState()
 {

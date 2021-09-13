@@ -92,12 +92,12 @@ class SettingsModule {
 
         var widgets = this.widgets, that = this;
 
-        widgets.addTitle("Graph settings");
+        widgets.addTitle("Render Graph settings");
+        widgets.widgets_per_row = 1;
         widgets.addSeparator();
-        widgets.widgets_per_row = 2;
         // widgets.addCheckbox("Autoconnect only", this.onlyAutoConnect, {name_width: "80%", callback: function(v){ that.onlyAutoConnect = v; that.apply(); }})
         widgets.addCheckbox("Connection names", this.render_link_name, {name_width: "80%", callback: function(v){ that.render_link_name = v; that.apply(); }})
-        widgets.addCheckbox("Autocreate on drag", this.autocreate_node, {name_width: "80%", callback: function(v){ that.autocreate_node = v; that.apply(); }})
+        //widgets.addCheckbox("Autocreate on drag", this.autocreate_node, {name_width: "80%", callback: function(v){ that.autocreate_node = v; that.apply(); }})
         widgets.addCheckbox("Connection arrows", this.render_connection_arrows, {name_width: "80%", callback: function(v){ that.render_connection_arrows = v; that.apply(); }})
         widgets.addCheckbox("Connection tooltip", this.render_link_tooltip, {name_width: "80%", callback: function(v){ that.render_link_tooltip = v; that.apply(); }})
 
@@ -113,7 +113,6 @@ class SettingsModule {
             widgets.on_refresh();
             that.apply(); 
         }});
-        widgets.widgets_per_row = 1;
         widgets.addSpace(7);
     }
 
