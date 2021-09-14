@@ -8113,6 +8113,8 @@ LGraphNode.prototype.executeAction = function(action)
                         ctx.textAlign = "left";
                     } else {
                         ctx.textAlign = "left";
+                        if(title.length > (size[0] * 0.095))
+                            title = title.substr(0, size[0] * 0.095) + "...";
                         ctx.fillText(
                             title,
                             title_height,
