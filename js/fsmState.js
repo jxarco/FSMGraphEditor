@@ -178,6 +178,19 @@ FSMState.prototype.getFinalState = function()
     }
 }
 
+FSMState.prototype.getFirstFreeInputSlot = function() {
+
+    if(!this.inputs) 
+    return -1;
+
+    for(var i in this.inputs) {
+        var input = this.inputs[i];
+        if(!input.link) return parseInt(i);
+    }
+
+    return -1;
+}
+
 FSMState.title = "State";
 FSMState.All = {};
 FSMState.InitialState = null;

@@ -245,8 +245,56 @@ var Interface = {
                 if(app["graph"]) 
                     app["graph"].processTransitionRenamed(t.id, null, v);
             }});
-            widgets.addString("Source", t.origin, {disabled: true});
-            widgets.addString("Target", t.target, {disabled: true});
+            var sourceState = widgets.addString("Source", t.origin, {disabled: true});
+            sourceState.addEventListener("contextmenu", function(e){
+                e.preventDefault();
+
+                var nodes = [{title: "Select origin (Beta)", disabled: true}, null];
+
+                for(var n in FSMState.All) {
+                    if(n == t.origin) continue;
+                    nodes.push({
+                        title: n,
+                        callback: function(option, e){
+                            // remove previous
+                            FSMTransition.RemoveById(t.id);
+                            var oldSrc = FSMState.GetByName(t.origin);
+                            oldSrc.disconnectOutput(t.link.origin_slot);
+                            // connect new
+                            var nodeSrc = FSMState.GetByName(option.title);
+                            var nodeDst = FSMState.GetByName(t.target);
+                            app["graph"].canvas.onAutoConnectNode(nodeSrc.getFirstFreeInputSlot(), nodeSrc, nodeDst, t.link.target_slot);
+                        }
+                    });
+                }
+
+                new LiteGraph.ContextMenu( nodes, { event: e});
+            });
+            var targetState = widgets.addString("Target", t.target, {disabled: true});
+            targetState.addEventListener("contextmenu", function(e){
+                e.preventDefault();
+
+                var nodes = [{title: "Select target (Beta)", disabled: true}, null];
+
+                for(var n in FSMState.All) {
+                    if(n == t.target) continue;
+                    nodes.push({
+                        title: n,
+                        callback: function(option, e){
+                            // remove previous
+                            FSMTransition.RemoveById(t.id);
+                            var oldTarget = FSMState.GetByName(t.target);
+                            oldTarget.disconnectInput(t.link.target_slot);
+                            // connect new
+                            var nodeSrc = FSMState.GetByName(t.origin);
+                            var nodeDst = FSMState.GetByName(option.title);
+                            app["graph"].canvas.onAutoConnectNode(t.link.origin_slot, nodeSrc, nodeDst);
+                        }
+                    });
+                }
+
+                new LiteGraph.ContextMenu( nodes, { event: e});
+            });
 
             that.showProperties(t, LTransitionProperties, LTransitionTypes, filter, true);
             
