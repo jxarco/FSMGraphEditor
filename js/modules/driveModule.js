@@ -173,6 +173,9 @@ class DriveModule {
                 // Update UI
                 LiteGUI.menubar.menu[4].name = "<b>" + filename + "<b>";
                 LiteGUI.menubar.updateMenu();
+
+                LiteGUI.menubar.menu[5].name = "Last time saved: Never";
+                LiteGUI.menubar.updateMenu();
             } 
         }, {title: "Load FSM" });
     }
