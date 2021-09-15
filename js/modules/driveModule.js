@@ -495,7 +495,7 @@ class DriveModule {
     {
         options = options || {};
         var parent = this.browser_container;
-        parent.style.height = (160 + Math.trunc(ObjectSize(this.files) / 5) * 130) +  "px";
+        parent.style.height = (300 + Math.trunc(ObjectSize(this.files) / 5) * 130) +  "px";
 
         // Clear resources panel
         parent.innerHTML = "";
