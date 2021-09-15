@@ -269,16 +269,16 @@ class GraphModule {
             e.stopPropagation();
             e.stopImmediatePropagation();
 
+            var parseFile = (e.dataTransfer.files.length);
+
             for (var i = 0; i < e.dataTransfer.files.length; i++) {
                 var file = e.dataTransfer.files[i];
-                app["drive"].onDropFile(file);
+                app["drive"].onDropFile(file, parseFile);
             }
 
             // change tab if more than one file loaded
             if(e.dataTransfer.files.length > 1)
                 app["drive"].tab.click();
-            else
-                app["drive"].parseFile(e.dataTransfer.files[0].name)
         });
     }
 

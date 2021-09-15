@@ -56,11 +56,15 @@ var Interface = {
 		LiteGUI.createMenubar(null,{sort_entries: false});
 
         LiteGUI.menubar.add("File/New", { callback: app["graph"].reset.bind(app["graph"])  });
-        LiteGUI.menubar.add("Engine tools/Skeleton exporter", { callback: that.openSkeletonFileExporter.bind(that)});
+        // LiteGUI.menubar.add("Engine tools/Skeleton exporter", { callback: that.openSkeletonFileExporter.bind(that)});
+        LiteGUI.menubar.add("Shortcuts/Save (Ctrl S)", { disabled: true });
+        LiteGUI.menubar.add("Shortcuts/Export FSM (Ctrl E)", { disabled: true });
+        LiteGUI.menubar.add("Shortcuts/Export Graph (LShift + Ctrl E)", { disabled: true });
         LiteGUI.menubar.add("About/Author: @jxarco", { disabled: true });
         LiteGUI.menubar.add("About/Using litegraph.js and litegui.js (@jagenjo)", { disabled: true });
         LiteGUI.menubar.add("|", { disabled: true });
         LiteGUI.menubar.add("", { disabled: true });
+        LiteGUI.menubar.add("Last time saved: Never", { disabled: true });
     },
 
     createSidePanel() {

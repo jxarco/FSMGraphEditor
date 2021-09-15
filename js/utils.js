@@ -133,3 +133,8 @@ function showError(text, title) {
     if(!text) return;
     LiteGUI.alert(text, {"title": title ? title : "Error"});
 }
+
+function getDate() {
+    var date = Date();
+    return date.substr(0, date.indexOf(" GMT"));
+}

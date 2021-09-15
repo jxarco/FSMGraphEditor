@@ -62,6 +62,25 @@ var app = {
                 if(!e.ctrlKey)
                 return;
 
+                if(!e.ctrlKey)
+                return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                var drive = app["drive"];
+
+                if(!drive)
+                return;
+
+                drive.saveGraph();
+            }
+
+            if(e.key == "e" || e.keyCode == 69)
+            {
+                if(!e.ctrlKey)
+                return;
+
                 e.preventDefault();
                 e.stopPropagation();
 

@@ -127,7 +127,7 @@ class DriveModule {
         this.showInBrowserContent();
     }
 
-    onDropFile(file) {
+    onDropFile(file, parse_file) {
 
         var filename = file.name;
 
@@ -137,34 +137,71 @@ class DriveModule {
             return;
         }
 
-        this.files[filename] = file;
-        this.lastFileLoaded = filename;
-
-        // update files content
-        this.createDriveUI();
-        this.showInBrowserContent();
-    }
-
-    parseFile(filename) {
-
         var that = this;
         var reader = new FileReader();
-        var file = this.files[filename];
 
         reader.onload = function(event){
             var result = event.target.result;
             var fsmData = JSON.parse(result);
             fsmData.filename = filename;
-            LiteGUI.confirm("Current FSM will be lost", function(v){
-                if(v) that.importFile(fsmData);
-            }, {title: "Load FSM" });
+            fsmData.date = getDate();
+            that.files[filename] = fsmData;
+            that.showInBrowserContent();
+
+            if(parse_file)
+                that.parseFile(filename);
         }
         reader.readAsText( file );
+
+        this.lastFileLoaded = filename;
+
+        // update files content
+        this.createDriveUI();
     }
 
-    exportFile(filename, exportFsm) {
+    parseFile(filename) {
 
-        filename = filename || "export.graph";
+        var that = this;
+        var data = this.files[filename];
+
+        LiteGUI.confirm("Current FSM will be lost", function(v){
+            if(v){
+                that.importFile(data);
+                that.lastFileLoaded = filename;
+                that.createDriveUI();
+
+                // Update UI
+                LiteGUI.menubar.menu[4].name = "<b>" + filename + "<b>";
+                LiteGUI.menubar.updateMenu();
+            } 
+        }, {title: "Load FSM" });
+    }
+
+    saveGraph() {
+        var selectedFilename = this.lastFileLoaded ? this.lastFileLoaded : "unnamed.fsmgraph";
+        var date = this.exportFile(selectedFilename, false, true);
+        
+        // update files content
+        this.lastFileLoaded = selectedFilename;
+        // Update UI
+        LiteGUI.menubar.menu[4].name = "<b>" + selectedFilename + "<b>";
+        LiteGUI.menubar.updateMenu();
+
+        // UPdate save info
+        LiteGUI.menubar.menu[5].name = "Saved!";
+        LiteGUI.menubar.updateMenu();
+        this.createDriveUI();
+
+        setTimeout(function(){
+            date = date.substr(date.indexOf(" ") + 1);
+            LiteGUI.menubar.menu[5].name = "Last time saved: " + date;
+            LiteGUI.menubar.updateMenu();
+        }, 3000);
+    }
+
+    exportFile(filename, exportFsm, saveOnly) {
+
+        filename = filename || "export.fsmgraph";
         var jData;
 
         if(exportFsm) {
@@ -181,12 +218,20 @@ class DriveModule {
                 fsm: jFsm,
                 graph: jGraph
             };
+
+            jData.date = getDate();
+            this.files[filename] = jData;
+            this.showInBrowserContent();
         }
        
-        if(jData)
+        if(saveOnly){
+            return jData.date;
+        }
+
+        if(jData) {
             LiteGUI.downloadFile(filename, JSON.stringify(jData, null, 4));
-        else
-        {
+        }
+        else {
             LiteGUI.alert("Can't export file. Check console for more detail", {title: "error"});
         }
     }
@@ -360,12 +405,6 @@ class DriveModule {
     }
 
     importFile(data) {
-
-        // Modify FSM Title in Menubar
-        {
-            LiteGUI.menubar.menu[4].name = data.filename || "";
-            LiteGUI.menubar.updateMenu();
-        }
 
         var graphModule = app["graph"];
         var graph = graphModule.graph;
@@ -607,14 +646,18 @@ class DriveModule {
     showItemContextMenu( item, event )
     {
         var that = this;
-        var actions = ["Load", "Delete"];
-    
+        var filename = item.dataset["filename"];
+
+        var actions = [{
+            title: this.files[filename].date,
+            disabled: true
+        }, null, "Load", "Delete"];
+        
+
         var menu = new LiteGUI.ContextMenu( actions, { ignore_item_callbacks: true, event: event, title: "Resource", callback: function(action, options, event) {
             var fullpath = item.dataset["fullpath"] || item.dataset["filename"];
             if(!fullpath)
                 return;
-
-            var filename = item.dataset["filename"];
 
             if(action == "Load")
             {
