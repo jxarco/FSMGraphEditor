@@ -179,24 +179,7 @@ class DriveModule {
 
     saveGraph() {
         var selectedFilename = this.lastFileLoaded ? this.lastFileLoaded : "unnamed.fsmgraph";
-        var date = this.exportFile(selectedFilename, false, true);
-        
-        // update files content
-        this.lastFileLoaded = selectedFilename;
-        // Update UI
-        LiteGUI.menubar.menu[4].name = "<b>" + selectedFilename + "<b>";
-        LiteGUI.menubar.updateMenu();
-
-        // UPdate save info
-        LiteGUI.menubar.menu[5].name = "Saved!";
-        LiteGUI.menubar.updateMenu();
-        this.createDriveUI();
-
-        setTimeout(function(){
-            date = date.substr(date.indexOf(" ") + 1);
-            LiteGUI.menubar.menu[5].name = "Last time saved: " + date;
-            LiteGUI.menubar.updateMenu();
-        }, 3000);
+        this.exportFile(selectedFilename, false, true);
     }
 
     exportFile(filename, exportFsm, saveOnly) {
@@ -222,10 +205,28 @@ class DriveModule {
             jData.date = getDate();
             this.files[filename] = jData;
             this.showInBrowserContent();
+
+            // update files content
+            this.lastFileLoaded = filename;
+            // Update UI
+            LiteGUI.menubar.menu[4].name = "<b>" + filename + "<b>";
+            LiteGUI.menubar.updateMenu();
+
+            // UPdate save info
+            LiteGUI.menubar.menu[5].name = "Saved!";
+            LiteGUI.menubar.updateMenu();
+            this.createDriveUI();
+
+            setTimeout(function(){
+                var date = jData.date;
+                date = date.substr(date.indexOf(" ") + 1);
+                LiteGUI.menubar.menu[5].name = "Last time saved: " + date;
+                LiteGUI.menubar.updateMenu();
+            }, 3000);
         }
        
         if(saveOnly){
-            return jData.date;
+            return;
         }
 
         if(jData) {
