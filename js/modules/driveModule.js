@@ -380,8 +380,17 @@ class DriveModule {
         // fill states
         for(var i = 0; i < graph._nodes_in_order.length; ++i) {
             var state = graph._nodes_in_order[i];
-            if(state.type !== "states/default") continue;
+            if(state.type !== "states/default" && state.type !== "states/shortcut") 
+            continue;
             FSMState.All[state.title] = state;
+        }
+
+        // Once we have all nodes, configure shortcuts
+        for(var i = 0; i < graph._nodes_in_order.length; ++i) {
+            var state = graph._nodes_in_order[i];
+            if(!state.is_shortcut || !state.shortcut_set)
+            continue;
+            state.shortcut_target = FSMState.All[state.shortcut_target];
         }
 
         // fill transitions from links to have new updated references

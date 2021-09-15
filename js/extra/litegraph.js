@@ -2383,6 +2383,14 @@
             this.customType = info.customType;
         }
 
+        if(info.is_shortcut) {
+            this.is_shortcut = info.is_shortcut;
+            if(info.shortcut_set){
+                this.shortcut_set = info.shortcut_set;
+                this.shortcut_target_title = info.shortcut_target;
+            }
+        }
+
         if (this.onConnectionsChange) {
             if (this.inputs) {
                 for (var i = 0; i < this.inputs.length; ++i) {
@@ -2508,6 +2516,9 @@
         if (this.bgcolor) {
             o.bgcolor = this.bgcolor;
         }
+        if (this.fontcolor) {
+            o.fontcolor = this.fontcolor;
+        }
         if (this.boxcolor) {
             o.boxcolor = this.boxcolor;
         }
@@ -2521,6 +2532,15 @@
 
         if(this.customType) {
             o.customType = this.customType;
+        }
+
+        if(this.is_shortcut) {
+            o.is_shortcut = this.is_shortcut;
+
+            if(this.shortcut_set) {
+                o.shortcut_target = this.shortcut_target.title;
+                o.shortcut_set = this.shortcut_set;    
+            }
         }
 
         if (this.onSerialize) {
