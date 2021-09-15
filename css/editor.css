@@ -155,3 +155,8 @@ Webglstudio editor
 .inspector:not(.one_line) .widget.even.variable.vec3 .text.string, .wname.vec3 {
 	border-left: 4px solid rgb(251, 255, 1) !important;
 }
+
+li.menubar-right{
+	float: right;
+	font-size: 1em;
+}

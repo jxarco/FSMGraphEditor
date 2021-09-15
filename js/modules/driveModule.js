@@ -172,10 +172,10 @@ class DriveModule {
 
                 // Update UI
                 LiteGUI.menubar.menu[4].name = "<b>" + filename + "<b>";
-                LiteGUI.menubar.updateMenu();
+                Interface.updateMenu();
 
                 LiteGUI.menubar.menu[5].name = "Last time saved: Never";
-                LiteGUI.menubar.updateMenu();
+                Interface.updateMenu();
             } 
         }, {title: "Load FSM" });
     }
@@ -211,20 +211,18 @@ class DriveModule {
 
             // update files content
             this.lastFileLoaded = filename;
+            
             // Update UI
             LiteGUI.menubar.menu[4].name = "<b>" + filename + "<b>";
-            LiteGUI.menubar.updateMenu();
-
-            // UPdate save info
             LiteGUI.menubar.menu[5].name = "Saved!";
-            LiteGUI.menubar.updateMenu();
+            Interface.updateMenu();
             this.createDriveUI();
 
             setTimeout(function(){
                 var date = jData.date;
                 date = date.substr(date.indexOf(" ") + 1);
                 LiteGUI.menubar.menu[5].name = "Last time saved: " + date;
-                LiteGUI.menubar.updateMenu();
+                Interface.updateMenu();
             }, 3000);
         }
        

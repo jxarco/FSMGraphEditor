@@ -65,6 +65,15 @@ var Interface = {
         LiteGUI.menubar.add("|", { disabled: true });
         LiteGUI.menubar.add("", { disabled: true });
         LiteGUI.menubar.add("Last time saved: Never", { disabled: true });
+
+        // Configs
+        LiteGUI.menubar.menu[5].element.classList.add("menubar-right");
+    },
+
+    updateMenu() {
+
+        LiteGUI.menubar.updateMenu();
+        LiteGUI.menubar.menu[5].element.classList.add("menubar-right");
     },
 
     createSidePanel() {
